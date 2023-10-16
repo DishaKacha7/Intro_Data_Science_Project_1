@@ -1,3 +1,17 @@
+
+```{r }
+flight_data <- read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
+str(flight_data)
+
+
+
+```
+
+year <- flight_data[order(flight_data$Year,flight_data$Month),]
+print(year)
+
+
+
 ```{r }
 ggplot(year, aes(x = factor(Year)), fill = Year + scale_fill_brewer(palette="Set1") +
   geom_histogram()+  
