@@ -34,8 +34,56 @@ options(scientific=T, digits = 3)
 ```
 
 ```{r read_csv, include = TRUE}
-us_flight_data<-read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/International_Report_Departures.csv")
+us_flight_data<-read.csv("International_Report_Departures_Project_1.csv")
 str(us_flight_data)
+```
+
+```{r sort_columns, include = TRUE}
+library(dplyr)
+library(ggplot2)
+top_carrier_df <- us_flight_data %>% group_by(carrier)%>%
+  summarise(a_sum=length(carrier))
+top_carrier_df <- top_carrier_df[order(-top_carrier_df$a_sum),]%>% top_n(5)
+
+airports <- read.csv("Airport_Codes.csv")
+
+us_flight_data <- merge(x = us_flight_data, y = airports, by.x="fg_apt", by.y="IATA")
+
+carriers <- read.csv("carrier codes.csv")
+
+us_flight_data <- merge(x = us_flight_data, y = carriers, by = "carrier")
+
+top_carrier_df <- us_flight_data %>% group_by(Carrier_Name)%>%
+  summarise(a_sum=length(Carrier_Name))
+top_carrier_df <- top_carrier_df[order(-top_carrier_df$a_sum),]%>% top_n(5)
+
+top_airport_df <- us_flight_data %>% group_by(Airport)%>%
+  summarise(b_sum=length(Airport))
+top_airport_df <- top_airport_df[order(-top_airport_df$b_sum),]%>% top_n(10)
+
+top_country_df <- us_flight_data %>% group_by(Country)%>%
+  summarise(c_sum=length(Country))
+top_country_df <- top_country_df[order(-top_country_df$c_sum),]%>% top_n(5)
+```
+
+
+```{r sort_columns, include = TRUE}
+
+ggplot()+geom_line(data=tt ,
+             aes(x=Year,
+                 color = Carrier_Name), stat="count")
+
+
+ggplot(data=top_carrier_df, aes(x=reorder(Carrier_Name,-a_sum),y=a_sum)) +
+geom_bar(stat="identity") 
+
+
+ggplot(data=top_country_df, aes(x=reorder(Country,-c_sum),y=c_sum)) +
+geom_bar(stat="identity") 
+
+
+ggplot(data=airports_merged, aes(x=reorder(Airport,-b_sum),y=b_sum)) +
+geom_bar(stat="identity") 
 ```
 
 ```{r sort_columns, include = TRUE}

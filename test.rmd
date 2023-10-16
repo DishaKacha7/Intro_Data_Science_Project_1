@@ -1,0 +1,106 @@
+---
+title: "HW 3: R and RMarkdown Basics"
+author: "Amit Shnedge"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r init, include=F}
+```
+
+```{r setup, include=FALSE}
+# Some of common RMD options (and the defaults) are: 
+# include=T, eval=T, echo=T, results='hide'/'asis'/'markup',..., collapse=F, warning=T, message=T, error=T, cache=T, fig.width=6, fig.height=4, fig.dim=c(6,4) #inches, fig.align='left'/'center','right', 
+knitr::opts_chunk$set(warning = F, message = F)
+# Can globally set option for number display format.
+options(scientific=T, digits = 3) 
+# options(scipen=9, digits = 3) 
+```
+
+```{r}
+# 1. Do not provide answers/comments inside code blocks (like here) -- those are notes between coders/self and will be ignored for grading. 
+# 2. Make sure your knitr options are set to include all results/code to be graded in the final document.
+# 3. All charts/graphs/tables should have appropriate titles/labels/captions. 
+```
+
+# Question 1: Read-in the data.
+**Read in the file `BaseballHeightWeight.csv` as a data frame (e.g. using the `read.csv` function) and save it as `baseball`. Then display the structure of the data frame using the function `str`.**  
+```{r Q1 , include = TRUE}
+library(readr)
+departure <- read_csv("DataSet/International_Report_Departures.csv")
+str(departure)
+```
+
+```{r Q1 , include = TRUE}
+library(ggplot2)
+library(babynames) # provide the dataset: a dataframe called babynames
+library(dplyr)
+
+# Keep only 3 names
+
+don <- departure %>% 
+  filter(!carrier %in% test)
+
+don
+test
+# Plot
+don %>%
+  ggplot( aes(x=Year, group=carrier, color=carrier)) +
+    geom_line()
+
+ggplot()+geom_line(data=don ,
+             aes(x=Year,
+                 color = carrier), stat="count")+ theme(legend.position = "none")
+
+
+test <- departure %>% 
+  filter(Year %in% c(2020)) %>% select(carrier) %>% unique()
+
+library(dplyr)
+
+test <- departure %>% 
+  filter(Year %in% c(2020,2019)) %>% 
+  distinct(carrier)
+
+don <- departure %>% 
+  filter(!carrier %in% test$carrier)
+```
+
+```{r Q1 , include = TRUE}
+ttt <- departure %>% group_by(carrier)%>%
+  summarise(a_sum=length(carrier))
+ttt
+top_10 <- ttt[order(-ttt$a_sum),] %>% top_n(20)
+rest <- ttt[order(-ttt$a_sum),] %>% filter(!carrier %in% top_10$carrier)
+top_10[order(top_10$a_sum),]
+sum(rest$a_sum)
+```
+
+```{r Q1 , include = TRUE}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
