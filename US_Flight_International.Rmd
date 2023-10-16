@@ -68,3 +68,29 @@ ggplot(departure_each_season, aes(x = Season, y = Total_Flights, fill = Season))
   scale_fill_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Fall" = "red")) +
   theme_minimal()
 ```
+```{r occurences line}
+
+# Combine the values from both columns into pairs
+pairs <- paste(us_flight_data$usg_apt, us_flight_data$fg_apt)
+
+# Calculate the occurrences of each unique pair
+pair_counts <- table(pairs)
+
+# Sort the pairs by occurrence in descending order
+sorted_pairs <- names(sort(pair_counts, decreasing = TRUE))
+
+# Select the top 10 pairs
+top_10_pairs <- sorted_pairs[1:10]
+
+# Filter the data to include only the top 10 pairs
+filtered_data <- data_file_1[pairs %in% top_10_pairs, ]
+
+# Create a line graph for the top 10 pairs
+library(ggplot2)
+ggplot(data = as.data.frame(table(paste(filtered_data$usg_apt, filtered_data$fg_apt))), 
+       aes(x = Var1, y = Freq, group = 1)) +
+  geom_line(color = "dodgerblue", size = 1) +
+  labs(title = "Top 10 Occurrences for Unique Pairs of USG and FG",
+       x = "Pair", y = "Occurrences") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
