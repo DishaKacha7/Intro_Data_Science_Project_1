@@ -142,3 +142,9 @@ chi_squared_test <- chisq.test(contingency_table)
 
 print(chi_squared_test)
 ```
+```{r flights_year_carriergroup, include = TRUE}
+total_flights <- aggregate(Total ~ Year + carriergroup, us_flight_data, sum)
+```
+
+
+
