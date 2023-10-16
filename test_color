@@ -18,4 +18,7 @@ ggplot(year, aes(x = factor(Year)), fill = Year + scale_fill_brewer(palette="Set
   labs(title="Flight Count per Year") +
   labs(x="Year", y="Count")
 
+ggplot(data = year, aes(x = factor(Year), fill = factor(Year))) +
+   geom_bar() + scale_fill_brewer(palette = "Set1") + labs(title = "Flight Count per Year", x = "Year", y = "Count")
+
 ```
