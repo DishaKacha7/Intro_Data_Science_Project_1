@@ -1,0 +1,7 @@
+```{r }
+ggplot(year, aes(x = factor(Year)), fill = Year + scale_fill_brewer(palette="Set1") +
+  geom_histogram()+  
+  labs(title="Flight Count per Year") +
+  labs(x="Year", y="Count")
+
+```
