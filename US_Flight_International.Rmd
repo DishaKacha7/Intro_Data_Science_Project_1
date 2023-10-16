@@ -94,3 +94,51 @@ ggplot(data = as.data.frame(table(paste(filtered_data$usg_apt, filtered_data$fg_
        x = "Pair", y = "Occurrences") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+
+```{r Carrier Group}
+library(ezids)
+library(ggplot2)
+#Convert it into factor
+
+data_file_1$carriergroup <- factor(data_file_1$carriergroup)
+data_file_1$Year <- factor(data_file_1$Year)
+
+
+foreign_out =outlierKD2(data_file_1,fg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqplt=TRUE)
+us_out =outlierKD2(foreign_out,usg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqplt=TRUE)
+
+complete_data_changes = us_out
+```
+```{r Carrier Group 1}
+foreign_carrier <- subset(complete_data_changes,complete_data_changes$carriergroup==0)
+
+cat("Foreign Carrier are as follows:\n")
+head(foreign_carrier,7)
+
+us_carrier  <- subset(complete_data_changes,complete_data_changes$carriergroup==1)
+
+cat("US Carrier are as follows:\n")
+head(us_carrier,7)
+```
+
+```{r Contingency Table}
+
+contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
+row_names <- c("2011", "2012", "2013", "2014", "2015", "2016","2017","2018","2019","2020")
+rownames(contingency_table) <- row_names
+
+col_names <- c("Foreign","US")
+colnames(contingency_table) <- col_names
+
+xkabledply(contingency_table, title="Contingency table")
+```
+
+```{r Chi-square}
+contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
+
+chi_squared_test <- chisq.test(contingency_table)
+
+
+print(chi_squared_test)
+```
