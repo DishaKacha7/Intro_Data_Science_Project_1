@@ -34,7 +34,126 @@ options(scientific=T, digits = 3)
 ```
 
 ```{r read_csv, include = TRUE}
-us_flight_data<-read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/International_Report_Departures.csv")
+us_flight_data<-read.csv("International_Report_Departures_Project_1.csv")
+str(us_flight_data)
+```
+
+```{r sort_columns, include = TRUE}
+library(dplyr)
+library(ggplot2)
+top_carrier_df <- us_flight_data %>% group_by(carrier)%>%
+  summarise(a_sum=length(carrier))
+top_carrier_df <- top_carrier_df[order(-top_carrier_df$a_sum),]%>% top_n(5)
+
+airports <- read.csv("Airport_Codes.csv")
+
+us_flight_data <- merge(x = us_flight_data, y = airports, by.x="fg_apt", by.y="IATA")
+
+carriers <- read.csv("carrier codes.csv")
+
+us_flight_data <- merge(x = us_flight_data, y = carriers, by = "carrier")
+
+top_carrier_df <- us_flight_data %>% group_by(Carrier_Name)%>%
+  summarise(a_sum=length(Carrier_Name))
+top_carrier_df <- top_carrier_df[order(-top_carrier_df$a_sum),]%>% top_n(5)
+
+top_airport_df <- us_flight_data %>% group_by(Airport)%>%
+  summarise(b_sum=length(Airport))
+top_airport_df <- top_airport_df[order(-top_airport_df$b_sum),]%>% top_n(10)
+
+top_country_df <- us_flight_data %>% group_by(Country)%>%
+  summarise(c_sum=length(Country))
+top_country_df <- top_country_df[order(-top_country_df$c_sum),]%>% top_n(5)
+```
+
+
+```{r sort_columns, include = TRUE}
+
+ggplot()+geom_line(data=tt ,
+             aes(x=Year,
+                 color = Carrier_Name), stat="count")
+
+
+ggplot(data=top_carrier_df, aes(x=reorder(Carrier_Name,-a_sum),y=a_sum)) +
+geom_bar(stat="identity") 
+
+
+ggplot(data=top_country_df, aes(x=reorder(Country,-c_sum),y=c_sum)) +
+geom_bar(stat="identity") 
+
+
+ggplot(data=airports_merged, aes(x=reorder(Airport,-b_sum),y=b_sum)) +
+geom_bar(stat="identity") 
+```
+
+```{r sort_columns, include = TRUE}
+us_flight_data <- us_flight_data[order(us_flight_data$Year,us_flight_data$Month),]
+print(us_flight_data)
+```
+
+```{r departure_each_month, include = TRUE}
+departures_each_month <- aggregate(data_dte ~ Year + Month, data = us_flight_data, FUN = length)
+colnames(departures_each_month) <- c("Year","Month","Total_Flights")
+print(departures_each_month)
+```
+
+```{r departures_by_season, include = TRUE}
+season_data <- departures_each_month %>% 
+      mutate(Season = case_when(departures_each_month$Month %in% c(12,1,2) ~ 'Winter',                                       departures_each_month$Month %in% c(3,4,5) ~ 'Spring',
+                                departures_each_month$Month %in% c(6,7,8) ~ 'Summer',
+                                departures_each_month$Month %in% c(9,10,11) ~ 'Fall'))
+
+departure_each_season <- aggregate(Total_Flights ~ Year + Season, data = season_data, FUN = sum)
+departure_each_season
+```
+
+```{r bar_plot, include = TRUE}
+library(ggplot2)
+
+ggplot(departure_each_season, aes(x = Season, y = Total_Flights, fill = Season)) +
+  geom_bar(stat = "identity", width = 0.35) +
+  labs(x = "Season", y = "Total Flights", title = "Total Flights per Season") +
+  scale_fill_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Fall" = "red")) +
+  theme_minimal()
+```
+=======
+---
+title: "US International Flight Data "
+author: "Group 4"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r init, include=F}
+# The package "ezids" (EZ Intro to Data Science) includes some helper functions we developed for the course. 
+# Some of the frequently used functions are loadPkg(), xkabledply(), xkablesummary(), uzscale(), etc.
+# You will need to install it (once) from GitHub.
+# library(devtools)
+# devtools::install_github("physicsland/ezids")
+# Then load the package in your R session.
+library(ezids)
+```
+
+```{r setup, include=FALSE}
+# Some of common RMD options (and the defaults) are: 
+# include=T, eval=T, echo=T, results='hide'/'asis'/'markup',..., collapse=F, warning=T, message=T, error=T, cache=T, fig.width=6, fig.height=4, fig.dim=c(6,4) #inches, fig.align='left'/'center','right', 
+knitr::opts_chunk$set(warning = F, message = F)
+# Can globally set option for number display format.
+options(scientific=T, digits = 3) 
+# options(scipen=9, digits = 3) 
+```
+
+```{r read_csv, include = TRUE}
+us_flight_data<-read.csv("International_Report_Departures_Project_1.csv")
 str(us_flight_data)
 ```
 
@@ -68,7 +187,8 @@ ggplot(departure_each_season, aes(x = Season, y = Total_Flights, fill = Season))
   scale_fill_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Fall" = "red")) +
   theme_minimal()
 ```
-```{r occurences line}
+
+```{r WAC Analysis 1}
 
 # Combine the values from both columns into pairs
 pairs <- paste(us_flight_data$usg_apt, us_flight_data$fg_apt)
@@ -83,7 +203,7 @@ sorted_pairs <- names(sort(pair_counts, decreasing = TRUE))
 top_10_pairs <- sorted_pairs[1:10]
 
 # Filter the data to include only the top 10 pairs
-filtered_data <- data_file_1[pairs %in% top_10_pairs, ]
+filtered_data <- us_flight_data[pairs %in% top_10_pairs, ]
 
 # Create a line graph for the top 10 pairs
 library(ggplot2)
@@ -95,33 +215,20 @@ ggplot(data = as.data.frame(table(paste(filtered_data$usg_apt, filtered_data$fg_
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
-
-```{r Carrier Group}
+```{r WAC Carrier Group}
 library(ezids)
 library(ggplot2)
 #Convert it into factor
 
-data_file_1$carriergroup <- factor(data_file_1$carriergroup)
-data_file_1$Year <- factor(data_file_1$Year)
+us_flight_data$carriergroup <- factor(us_flight_data$carriergroup)
+us_flight_data$Year <- factor(us_flight_data$Year)
 
 
-foreign_out =outlierKD2(data_file_1,fg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqplt=TRUE)
+foreign_out =outlierKD2(us_flight_data,fg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqplt=TRUE)
 us_out =outlierKD2(foreign_out,usg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqplt=TRUE)
 
 complete_data_changes = us_out
 ```
-```{r Carrier Group 1}
-foreign_carrier <- subset(complete_data_changes,complete_data_changes$carriergroup==0)
-
-cat("Foreign Carrier are as follows:\n")
-head(foreign_carrier,7)
-
-us_carrier  <- subset(complete_data_changes,complete_data_changes$carriergroup==1)
-
-cat("US Carrier are as follows:\n")
-head(us_carrier,7)
-```
-
 ```{r Contingency Table}
 
 contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
@@ -133,34 +240,11 @@ colnames(contingency_table) <- col_names
 
 xkabledply(contingency_table, title="Contingency table")
 ```
-
-```{r Chi-square}
+```{r WAC Chi-square}
 contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
 
 chi_squared_test <- chisq.test(contingency_table)
 
 
 print(chi_squared_test)
-```
-```{r flights_year_carriergroup, include = TRUE}
-total_flights <- aggregate(Total ~ Year + carriergroup, us_flight_data, sum)
-```
-```{r bar_chart, include = TRUE}
-ggplot(total_flights, aes(x = factor(Year), y = Total, fill = factor(carriergroup))) +
-       geom_bar(stat = "identity",position = "dodge") +
-      labs(x = "Year", y = "Total Flights", title = "Total Flights by Year and Carrier Group") +
-      scale_fill_manual(values = c("0" = "red", "1" = "blue"), 
-                       labels = c("0", "1"),
-                       name = "Carrier Group") +
-      theme_minimal() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
-```{r bar_chart, include = TRUE}
-ggplot(total_flights, aes(x = factor(Year), y = Total, fill = factor(carriergroup))) +
-       geom_bar(stat = "identity",position = "dodge") +
-      labs(x = "Year", y = "Total Flights", title = "Total Flights by Year and Carrier Group") +
-      scale_fill_manual(values = c("0" = "red", "1" = "blue"), 
-                labels = c("Foreign Carrier", "Domestic Carrier"),
-                       name = "Carrier Group") +
-      theme_minimal() 
 ```
