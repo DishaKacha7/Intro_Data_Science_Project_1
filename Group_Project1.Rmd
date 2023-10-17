@@ -1,0 +1,164 @@
+---
+title: "Group_project1"
+output: html_document
+date: "2023-10-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr) 
+library(ggplot2)
+library(ezids)
+library(RColorBrewer)
+
+
+```
+
+
+```{r }
+flight_data <- read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
+str(flight_data)
+
+
+
+```
+
+
+```{r }
+year <- flight_data[order(flight_data$Year,flight_data$Month),]
+print(year)
+
+
+```
+                 
+```{r }
+ggplot(year, aes(x = usg_apt, y = Year )) +
+  geom_line() +
+  labs(title = "Airpot usage",
+       x = "Airport location",
+       y = "Year"
+       )
+
+```
+
+```{r }
+ggplot(year, aes(Year)) + 
+  geom_histogram(fill = "pink")+
+  labs(title="Flight Count per Year") +
+  labs(x="Year", y="Count")
+
+```
+```{r }
+
+ggplot(data = year, aes(x = factor(Year), fill = factor(Year))) +
+   geom_bar() + scale_fill_brewer(palette = "Set3") + labs(title = "Flight Count per Year", x = "Year", y = "Count")
+
+```
+
+```{r }
+
+table(year$usg_apt)
+
+  
+
+```
+
+
+```{r }
+mx <- max(year$usg_apt)
+print(mx)
+
+mn <- min(year$usg_apt)
+print(mn)
+```
+
+```{r }
+dta2011 <- subset(year, Year == '2011')
+count(dta2011)
+
+dta2012 <- subset(year, Year == '2012')
+count(dta2012)
+
+dta2013 <- subset(year, Year == '2013')
+count(dta2013)
+
+dta2014 <- subset(year, Year == '2014')
+count(dta2014)
+
+dta2015 <- subset(year, Year == '2015')
+count(dta2015)
+
+dta2016 <- subset(year, Year == '2016')
+count(dta2016)
+
+dta2017 <- subset(year, Year == '2017')
+count(dta2017)
+
+dta2018 <- subset(year, Year == '2018')
+count(dta2018)
+
+dta2019 <- subset(year, Year == '2019')
+count(dta2019)
+
+dta2020 <- subset(year, Year == '2020')
+count(dta2020)
+```
+
+
+```{r }
+mxairport <- subset(year, usg_apt == 'ZZZ')
+print(mxairport)
+
+minairport <- subset(year, usg_apt == '1B1')
+print(minairport)
+
+mxcount <- count(mxairport)
+mincount <- count(minairport)
+print(mxcount)
+print(mincount)
+```
+```{r }
+
+ggplot(mxairport, aes(Year)) + 
+  geom_histogram()+
+  labs(title="MX airport flights") +
+  labs(x="Year", y="Count")
+
+```
+```{r }
+
+ggplot(data = mxairport, aes(x = factor(Year), fill = factor(Year))) +
+   geom_bar() + scale_fill_brewer(palette = "Set3") + labs(title = "Largest airport departure Count per Year", x = "Year", y = "Count")
+
+```
+
+
+
+```{r }
+ggplot(data = mxairport, aes(y = Year, x = Month, fill = usg_apt)) +
+  geom_point(size = 2, shape = 2) + 
+  labs(title = "Height vs Weight Scatter Plot",
+       y = "year",
+       x = "airport")
+
+```
+
+```{r }
+ggplot(data = year, aes(y = Month, x = Year, fill = usg_apt)) +
+  geom_point(size = 2, shape = 2) + 
+  labs(title = "Height vs Weight Scatter Plot",
+       y = "month",
+       x = "year")
+
+```
+
+```{r }
+count(year, usg_apt )
+
+
+```
+
+```{r }
+chisq.test(year$Year, year$usg_apt)
+
+```
