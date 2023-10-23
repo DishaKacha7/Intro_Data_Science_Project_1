@@ -1,5 +1,5 @@
 ---
-title: "US International Flight Data "
+title: "US International Flight Data"
 author: "Group 4"
 date: "`r Sys.Date()`"
 output:
