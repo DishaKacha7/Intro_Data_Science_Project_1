@@ -68,6 +68,8 @@ ggplot(departure_each_season, aes(x = Season, y = Total_Flights, fill = Season))
   scale_fill_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Fall" = "red")) +
   theme_minimal()
 ```
+**In the graph provided below, we have curated data by extracting values from both the 'USA gate' and 'Foreign gate' columns while including the most frequently occurring pairs. To illustrate this data, we have chosen a line graph as our visualization method, as depicted in the figure.**
+**Our aim in this analysis is to focus on the more common pairings between USA and foreign gates, thereby shedding light on more obvious patterns and relationships in the data.**
 ```{r occurences line}
 
 # Combine the values from both columns into pairs
