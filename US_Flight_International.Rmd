@@ -148,6 +148,21 @@ colnames(contingency_table) <- col_names
 
 xkabledply(contingency_table, title="Contingency table")
 ```
+**A statistical test for determining the independence or correlation between two or more categorical variables in a contingency table is the chi-square test. By comparing the observed frequencies of the categories to the predicted frequencies in the absence of any link, or if the variables were independent, it is possible to ascertain whether or not there is a significant relationship between these categorical variables.**
+
+**There are two primary formats for the chi-square test:**
+
+**The purpose of the Chi-Square Test of Independence is to ascertain if two categorical variables significantly depend on one another or have a connection. While the alternative hypothesis (Ha) contends that the two variables are dependent, the null hypothesis (H0) holds that they are independent.**
+
+**The Chi-Square Goodness-of-Fit Test evaluates how well the observed frequencies in a single category variable correspond to a given distribution, often an anticipated distribution. It examines if the observed data conforms to the distribution that was predicted.**
+**A chi-square test's result usually contains the following data**
+
+**A measure of the difference between actual and predicted frequencies is the Chi-Square Statistic (χ²). A greater discrepancy is indicated by a higher chi-square value.**
+**Degrees of Freedom (df): The p-value and critical values are computed using the degrees of freedom, which are based on the number of categories in each variable.**
+**p-Value: For the chi-square goodness-of-fit test or the chi-square test of independence, the p-value represents the likelihood of seeing the data under the assumptions of independence and goodness-of-fit, respectively. A low p-value (usually less than 0.05) indicates evidence that defies the null hypothesis.**
+**predicted Frequencies: In the event that there is no relationship, these are the predicted frequencies in each cell of the contingency table. In order to compute the chi-square statistic, they are compared to the observed frequencies.**
+**Test Results: Depending on the p-value, you can either successfully reject the null hypothesis (if p is greater than the selected significance threshold) or not.**
+**Effect Size: To gauge the magnitude of the relationship or its effect size, other statistics such as the Cramer's V or Phi coefficient may be included in some circumstances.**
 
 ```{r Chi-square}
 contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
