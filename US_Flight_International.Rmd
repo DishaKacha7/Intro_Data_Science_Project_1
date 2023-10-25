@@ -236,7 +236,7 @@ str(flight_data)
 <br>
 The first smart question we chose to analyze is: How has airline travel progressed and what changes have been made in services throughout the years. Through the analysis of this data we were able to do calculations to determine how airline departures have changed throughout the years. In this project some of the calculations that were performed consisted of mathematical equations, charts to represent the data, and making comparisons using the resulting data. For the year we calculated the rate of change to be able to determine how airline departures have changed over the years. Through this we were able to see that outside circumstances affect the flight departures. Viewers are able to see how the year 2020 affected the flight industry because there was a 78 percent decrease in departing international flights. This can be seen because due to the inability to make frequent flights in the spring, summer, and winter season it added to the steep decline in the airline industry. During the peak departures reached around 38,000 in 2018 followed by a decrease in airline data. This data allowed us to determine which airport had the highest number of flights to depart. This airport code for the largest number of departing flights is ZZZ. This airport is a small sea airport that is used primarily as a refueling point for departing flights in the U.S. This contributed to the large volume of flights that depart from this airport. Through the analysis of this data it was interesting to see how the air traffic in and out of this airport remained consistent throughout the years. 
 
-You can also embed plots, for example:
+
 
 ```{r}
 year <- flight_data[order(flight_data$Year,flight_data$Month),]
