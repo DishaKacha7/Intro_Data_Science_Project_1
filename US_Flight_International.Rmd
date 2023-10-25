@@ -1,6 +1,6 @@
 ---
-title: "US International Flight Data "
-author: "Group 4"
+title: "US International Flight Data : Group 4"
+author: "Amit Shendge, Disha Kacha, Rachel Culbreath, Saniya Shinde"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -33,8 +33,14 @@ options(scientific=T, digits = 3)
 # options(scipen=9, digits = 3) 
 ```
 
+## Introduction
+
+<br>
+The data set our team has selected to focus on is Airline data from 1990-2020. The dataset was downloaded from the Kaggle Website.
+This dataset includes a comprehensive analysis of airline traffic that focuses on flights that departed from U.S. gateways. The data highlights the airplane's departure information including the month, day, year, usg_apt, usg_wac, fg_apt_id, fg_apt, fg_wac, and airlineid. Through these data points we are able to create smart questions that allow us to analyze how the air traffic operates, how it changes, and what we can infer about air traffic with the given data. The analysis of our data included plots, graphs, and calculations that allowed us to gain a comprehensive understanding of the airline traffic.
+
 ```{r read_csv, include = TRUE}
-us_flight_data<-read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/International_Report_Departures.csv")
+us_flight_data<-read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/International_Report_Departures_Project_1.csv")
 str(us_flight_data)
 ```
 
@@ -42,6 +48,8 @@ str(us_flight_data)
 us_flight_data <- us_flight_data[order(us_flight_data$Year,us_flight_data$Month),]
 print(us_flight_data)
 ```
+
+**We have analyzed the total number of flights per season. Firstly, we calculate the total number of flights per month each year. Then, the total number of flights per season is calculated which is then plotted using a bar chart.**
 
 ```{r departure_each_month, include = TRUE}
 departures_each_month <- aggregate(data_dte ~ Year + Month, data = us_flight_data, FUN = length)
@@ -68,6 +76,10 @@ ggplot(departure_each_season, aes(x = Season, y = Total_Flights, fill = Season))
   scale_fill_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Fall" = "red")) +
   theme_minimal()
 ```
+
+**The bar chart shows the total number of flights for the Fall and Spring seasons are the highest. This maybe due to the spirng and winter breaks. Analyzing the peak seasons is crucial for formulating marketing strategies and infrastructure planning. This could include optimizing the routes, adjusting ticket prices, etc.**
+
+
 **In the graph provided below, we have curated data by extracting values from both the 'USA gate' and 'Foreign gate' columns while including the most frequently occurring pairs. To illustrate this data, we have chosen a line graph as our visualization method, as depicted in the figure.**
 **Our aim in this analysis is to focus on the more common pairings between USA and foreign gates, thereby shedding light on more obvious patterns and relationships in the data.**
 
@@ -193,16 +205,7 @@ print(chi_squared_test)
 ```{r flights_year_carriergroup, include = TRUE}
 total_flights <- aggregate(Total ~ Year + carriergroup, us_flight_data, sum)
 ```
-```{r bar_chart, include = TRUE}
-ggplot(total_flights, aes(x = factor(Year), y = Total, fill = factor(carriergroup))) +
-       geom_bar(stat = "identity",position = "dodge") +
-      labs(x = "Year", y = "Total Flights", title = "Total Flights by Year and Carrier Group") +
-      scale_fill_manual(values = c("0" = "red", "1" = "blue"), 
-                       labels = c("0", "1"),
-                       name = "Carrier Group") +
-      theme_minimal() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
+
 ```{r bar_chart, include = TRUE}
 ggplot(total_flights, aes(x = factor(Year), y = Total, fill = factor(carriergroup))) +
        geom_bar(stat = "identity",position = "dodge") +
@@ -212,6 +215,8 @@ ggplot(total_flights, aes(x = factor(Year), y = Total, fill = factor(carriergrou
                        name = "Carrier Group") +
       theme_minimal() 
 ```
+
+**The bar chart above shows the total number of flight of domestic and foreign carriers for each year. We can see that the total number of flights of domestic carriers than foreign carriers for each year. This maybe because domestic carriers have well established infrastructure at various airports across the country, making it easier for them to operate more flights. Also, domestic carriers have lower operational costs within USA as compared to foreign carriers.**
 ## Introduction
 
 <br>
