@@ -122,6 +122,8 @@ us_out =outlierKD2(foreign_out,usg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqpl
 
 complete_data_changes = us_out
 ```
+**Carrier Group 0 denotes Foreign Gate whereas 1 denotes USA Gate for all airlines in the data.**
+
 ```{r Carrier Group 1}
 foreign_carrier <- subset(complete_data_changes,complete_data_changes$carriergroup==0)
 
