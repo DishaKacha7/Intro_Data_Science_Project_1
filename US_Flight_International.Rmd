@@ -98,7 +98,7 @@ sorted_pairs <- names(sort(pair_counts, decreasing = TRUE))
 top_10_pairs <- sorted_pairs[1:10]
 
 # Filter the data to include only the top 10 pairs
-filtered_data <- data_file_1[pairs %in% top_10_pairs, ]
+filtered_data <-us_flight_data[pairs %in% top_10_pairs, ]
 
 # Create a line graph for the top 10 pairs
 library(ggplot2)
@@ -133,11 +133,11 @@ library(ezids)
 library(ggplot2)
 #Convert it into factor
 
-data_file_1$carriergroup <- factor(data_file_1$carriergroup)
-data_file_1$Year <- factor(data_file_1$Year)
+us_flight_data$carriergroup <- factor(us_flight_data$carriergroup)
+us_flight_data$Year <- factor(us_flight_data$Year)
 
 
-foreign_out =outlierKD2(data_file_1,fg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqplt=TRUE)
+foreign_out =outlierKD2(us_flight_data,fg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqplt=TRUE)
 us_out =outlierKD2(foreign_out,usg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqplt=TRUE)
 
 complete_data_changes = us_out
@@ -217,6 +217,21 @@ ggplot(total_flights, aes(x = factor(Year), y = Total, fill = factor(carriergrou
 ```
 
 **The bar chart above shows the total number of flight of domestic and foreign carriers for each year. We can see that the total number of flights of domestic carriers than foreign carriers for each year. This maybe because domestic carriers have well established infrastructure at various airports across the country, making it easier for them to operate more flights. Also, domestic carriers have lower operational costs within USA as compared to foreign carriers.**
+
+## Introduction
+
+<br>
+The data set our team has selected to focus on is Airline data from 1990-2020. This dataset includes a comprehensive analysis of airline traffic that focuses on flights that departed from U.S. gateways. The data highlights the airplane's departure information including the month, day, year, usg_apt, usg_wac, fg_apt_id, fg_apt, fg_wac, and airlineid. Through these data points we are able to create smart questions that allow us to analyze how the air traffic operates, how it changes, and what we can infer about air traffic with the given data. The analysis of our data included plots, graphs, and calculations that allowed us to gain a comprehensive understanding of the airline traffic.
+
+```{r}
+library(dplyr) 
+library(ggplot2)
+library(ezids)
+library(RColorBrewer)
+flight_data <- read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
+str(flight_data)
+
+```
 ## Introduction
 
 <br>
