@@ -172,6 +172,16 @@ chi_squared_test <- chisq.test(contingency_table)
 
 print(chi_squared_test)
 ```
+**Crucial details on the test's outcomes are provided by the output "X-squared = 1643.6, df = 9, p-value < 2.2e-16" obtained from a chi-square test. Let's examine the meaning of each value in detail:**
+
+**X-squared (2): The chi-square statistic (X-squared) is a gauge of the difference between the contingency table's observed and predicted frequencies. The X-squared value in your case is 1643.6. This suggests a significant departure between the observed data and what would be predicted if independence were assumed. An increased X-squared value indicates a more robust correlation or departure from independence.**
+
+**Degrees of Freedom (df): df = 9 in your case. The number of degrees of freedom utilized in the chi-square distribution is represented by degrees of freedom. The number of categories in the variables under analysis determines how it is calculated. In this instance, df = 9 indicates that the chi-square distribution has nine degrees of freedom.**
+
+**p-value: < 2.2e-16: An important result of the chi-square test is the p-value. Given the assumption of independence, it shows the likelihood of observing the data. The p-value in your example is p < 0.001, which is very small, almost equal to zero. This indicates that, given the null hypothesis of independence, it is extremely unlikely that the observed data happened by accident. Consequently, you would normally come to the conclusion that there is a statistically significant association between the variables and reject the null hypothesis.**
+
+**In conclusion, the data shows that the variables under study have a substantial and statistically significant relationship. The remarkably small p-value (< 0.001) and the large chi-square statistic (X-squared) indicate that there is a significant deviation between the observed data and the expected value if the variables were independent. The test's chi-square distribution can be learned more about from the degrees of freedom (df).**
+
 ```{r flights_year_carriergroup, include = TRUE}
 total_flights <- aggregate(Total ~ Year + carriergroup, us_flight_data, sum)
 ```
