@@ -135,6 +135,7 @@ us_carrier  <- subset(complete_data_changes,complete_data_changes$carriergroup==
 cat("US Carrier are as follows:\n")
 head(us_carrier,7)
 ```
+**The provided contingency table displays the cumulative counts for the usage of US Gates and Foreign Gates spanning the years 2011 to 2020. Notably, a significant decline in counts is evident for the year 2020. This substantial decrease can be attributed to the impact of the COVID-19 pandemic, which had far-reaching effects on travel and aviation during that period. **
 
 ```{r Contingency Table}
 
