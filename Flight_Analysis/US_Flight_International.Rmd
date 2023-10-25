@@ -66,7 +66,6 @@ top_country_df <- us_flight_data %>% group_by(Country)%>%
 top_country_df <- top_country_df[order(-top_country_df$c_sum),]%>% top_n(5)
 ```
 
-
 ```{r sort_columns, include = TRUE}
 
 ggplot()+geom_line(data=tt ,
