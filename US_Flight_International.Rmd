@@ -22,6 +22,7 @@ output:
 # devtools::install_github("physicsland/ezids")
 # Then load the package in your R session.
 library(ezids)
+library(dplyr)
 ```
 
 ```{r setup, include=FALSE}
