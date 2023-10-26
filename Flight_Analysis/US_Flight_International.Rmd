@@ -72,7 +72,6 @@ ggplot()+geom_line(data=tt ,
              aes(x=Year,
                  color = Carrier_Name), stat="count")
 
-
 ggplot(data=top_carrier_df, aes(x=reorder(Carrier_Name,-a_sum),y=a_sum)) +
 geom_bar(stat="identity") 
 
