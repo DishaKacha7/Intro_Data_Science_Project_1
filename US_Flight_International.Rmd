@@ -257,6 +257,9 @@ year <- flight_data[order(flight_data$Year,flight_data$Month),]
 
 ```
 
+<br> 
+The flight count per year graph allows viewers to gain a comprehensive understanding of how airline traffic has changed from 2011 to 2020. In the year 2018 the airline data reaches a peak amount of flights. There were 39926 flights that departed in 2018 and this shows us how the industry has developed. This airline departure data allows us to see how events happening in the world affect the amount of airline travel. This can be seen in the chart of the year 2020 as the pandemic resulted in decreased airline travel during some of the busiest times to travel. The number of flights fell to 9650 and this is due to the suspension of airline travel.  
+
 ```{r }
 
 ggplot(data = year, aes(x = factor(Year), fill = factor(Year))) +
