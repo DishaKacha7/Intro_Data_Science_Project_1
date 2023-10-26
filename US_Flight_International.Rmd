@@ -181,6 +181,7 @@ ggplot(top_country_df, aes(x = "", y = c_sum, fill = fct_inorder(Country))) +
 **Together, these charts provide a clear visual representation of the US's international flight distribution, emphasizing the predominance of Canada and Mexico in terms of flight counts.**
 
 ## Top 10 occurences of same US and Foreign gates in pairs
+
 ```{r occurences line}
 
 # Combine the values from both columns into pairs
@@ -219,7 +220,9 @@ ggplot(data = as.data.frame(table(paste(filtered_data$usg_apt, filtered_data$fg_
 **To explore and visualize the data further, we employed the 'outlierKD2' function. This function facilitated the generation of box plots, histograms, and quantile-quantile (qq) plots for the aforementioned categorical variables. These graphical representations serve as valuable tools to detect outliers and gain insights into the distribution and characteristics of the data.**
 
 **In this analysis, it's evident that the diagrams, both with and without outliers, appear identical. This similarity arises from the fact that categorical values, such as those in 'carrier group' and 'Year,' are not typically used for this type of graphical representation. Furthermore, it's worth noting that no null values were identified in this dataset. This observation highlights the unique nature of the variables being studied and reinforces the absence of missing data points in our analysis.**
+
 ##Checking any null values or outliers
+
 ```{r Carrier Group}
 library(ezids)
 library(ggplot2)
@@ -235,7 +238,9 @@ us_out =outlierKD2(foreign_out,usg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqpl
 complete_data_changes = us_out
 ```
 **Carrier Group 0 denotes Foreign Gate whereas 1 denotes USA Gate for all airlines in the data.**
+
 ## Creating Subset of Carrier Group column
+
 ```{r Carrier Group 1}
 foreign_carrier <- subset(complete_data_changes,complete_data_changes$carriergroup==0)
 
@@ -249,7 +254,8 @@ head(us_carrier,7)
 ```
 **The provided contingency table displays the cumulative counts for the usage of US Gates and Foreign Gates spanning the years 2011 to 2020. Notably, a significant decline in counts is evident for the year 2020. This substantial decrease can be attributed to the impact of the COVID-19 pandemic, which had far-reaching effects on travel and aviation during that period. **
 
-# Contingency table giving total counts of departures in US and Foreign gate per year.
+## Contingency table giving total counts of departures in US and Foreign gate per year.
+
 ```{r Contingency Table}
 
 contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
@@ -270,6 +276,7 @@ xkabledply(contingency_table, title="Contingency table")
 **The Chi-Square Goodness-of-Fit Test evaluates how well the observed frequencies in a single category variable correspond to a given distribution, often an anticipated distribution. It examines if the observed data conforms to the distribution that was predicted.**
 
 ## Chi-Square test using Year and Carrier Group
+
 ```{r Chi-square}
 contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
 
@@ -316,6 +323,7 @@ library(RColorBrewer)
 ```
 
 ## Year Plot
+
 <br>
 We chose to analyze: How has airline travel progressed and what changes have been made in services throughout the years. Through the analysis of this data we were able to do calculations to determine how airline departures have changed throughout the years. In this project some of the calculations that were performed consisted of mathematical equations, charts to represent the data, and making comparisons using the resulting data. For the year we calculated the rate of change to be able to determine how airline departures have changed over the years. Through this we were able to see that outside circumstances affect the flight departures. Viewers are able to see how the year 2020 affected the flight industry because there was a 78 percent decrease in departing international flights. This can be seen because due to the inability to make frequent flights in the spring, summer, and winter season it added to the steep decline in the airline industry. During the peak departures reached around 38,000 in 2018 followed by a decrease in airline data. This data allowed us to determine which airport had the highest number of flights to depart. This airport code for the largest number of departing flights is ZZZ. This airport is a small sea airport that is used primarily as a refueling point for departing flights in the U.S. This contributed to the large volume of flights that depart from this airport. Through the analysis of this data it was interesting to see how the air traffic in and out of this airport remained consistent throughout the years. 
 
@@ -405,6 +413,7 @@ mincount <- count(minairport)
 print(mxcount)
 print(mincount)
 ```
+
 ## Largest Airport Departures
 
 <br> 
@@ -424,7 +433,7 @@ chisq.test(year$Year, year$usg_apt)
 
 ```
 
-#Conclusion:
+## Conclusion
 
 **In conclusion, our exploratory data analysis has provided valuable insights into the complex world of flight patterns, airline utilization, and the impact of various factors in the aviation industry. Through a comprehensive examination of pre-2020 data, we have uncovered significant trends and patterns that shed light on the dynamics of this dynamic field.**
 
@@ -434,14 +443,8 @@ chisq.test(year$Year, year$usg_apt)
 
 **Furthermore, the analysis of airline data has enabled us to discern market dynamics, customer preferences, and the competitive forces that drive the industry forward. The insights gained from this data offer valuable information for aviation companies, policymakers, and travelers alike.**
 
-##Future Scope:
+## Future Scope
 
 **Looking ahead, our research is poised for further expansion and depth. The next phase of our investigation involves gathering and analyzing data from the post-pandemic period, commencing in 2020. This expansion into the recent years presents an exciting opportunity to evaluate how the aviation industry has coped with the unparalleled challenges brought about by the global pandemic.**
 
 **We aim to explore and document the profound impacts of the pandemic on the aviation sector. This includes understanding how airlines have adapted to the new normal, how passenger behavior has evolved, and the extent of the industry's recovery efforts. Our research will provide a holistic view of the transformations in the aviation industry, yielding insights that are relevant to not only industry stakeholders but also to the broader public and policymakers.**
-
-
-
-
-
-
