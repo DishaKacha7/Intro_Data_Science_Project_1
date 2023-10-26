@@ -83,6 +83,104 @@ ggplot(departure_each_season, aes(x = Season, y = Total_Flights, fill = Season))
 **In the graph provided below, we have curated data by extracting values from both the 'USA gate' and 'Foreign gate' columns while including the most frequently occurring pairs. To illustrate this data, we have chosen a line graph as our visualization method, as depicted in the figure.**
 **Our aim in this analysis is to focus on the more common pairings between USA and foreign gates, thereby shedding light on more obvious patterns and relationships in the data.**
 
+```{r , include = TRUE}
+top_carrier_df <- us_flight_data %>% group_by(carrier)%>%
+  summarise(a_sum=length(carrier))
+top_carrier_df <- top_carrier_df[order(-top_carrier_df$a_sum),]%>% top_n(5)
+
+airports <- read.csv("Airport_Codes.csv")
+
+us_flight_data <- merge(x = us_flight_data, y = airports, by.x="fg_apt", by.y="IATA")
+
+carriers <- read.csv("carrier codes.csv")
+
+us_flight_data <- merge(x = us_flight_data, y = carriers, by = "carrier")
+
+top_carrier_df <- us_flight_data %>% group_by(Carrier_Name)%>%
+  summarise(a_sum=length(Carrier_Name))
+top_carrier_df <- top_carrier_df[order(-top_carrier_df$a_sum),]%>% top_n(5)
+top_carrier_df <- us_flight_data %>% filter(Carrier_Name %in% top_carrier_df$Carrier_Name)
+carrier_counts <- table(top_carrier_df$Carrier_Name)
+top_carrier_df$Carrier_Name <- factor(top_carrier_df$Carrier_Name, levels = names(sort(carrier_counts, decreasing = TRUE)))
+
+
+top_airport_df <- us_flight_data %>% group_by(Airport)%>%
+  summarise(b_sum=length(Airport))
+top_airport_df <- top_airport_df[order(-top_airport_df$b_sum),]%>% top_n(10)
+top_airport_df <- us_flight_data %>% filter(Airport %in% top_airport_df$Airport)
+Airport_counts <- table(top_airport_df$Airport)
+top_airport_df$Airport <- factor(top_airport_df$Airport, levels = names(sort(Airport_counts, decreasing = TRUE)))
+
+
+top_country_df <- us_flight_data %>% group_by(Country)%>%
+  summarise(c_sum=length(Country))
+top_country_df <- top_country_df[order(-top_country_df$c_sum),]%>% top_n(10)
+top_country_df <- us_flight_data %>% filter(Country %in% top_country_df$Country)
+country_counts <- table(top_country_df$Country)
+top_country_df$Country <- factor(top_country_df$Country, levels = names(sort(country_counts, decreasing = TRUE)))
+```
+
+## Top 5 Crriers with highest number of flights departing from US
+
+```{r , include = TRUE}
+library(ggrepel)
+library(tidyverse)
+
+ggplot()+geom_line(data=top_carrier_df ,
+             aes(x=Year,
+                 color = Carrier_Name), stat="count") + labs(title = "Top 5 Crriers flights Year Wise", x = "Carrier Name", y = "Count")
+
+ggplot(data = top_carrier_df, aes(x = Carrier_Name, fill = Carrier_Name)) +
+   geom_bar() + scale_fill_brewer(palette = "Set3") + labs(title = "Top 5 Crriers flights from US airports", x = "Carrier Name", y = "Count")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+<br>
+**The graph presents a bar chart that showcases the count of flights attended by the top five US airport carriers. The x-axis enumerates the carriers, while the y-axis represents the number of flights attended.**
+
+**A clear visual distinction is evident between the carriers. United Airlines, Delta Airlines, and American Airlines dominate the chart with significantly higher counts, standing as the three major players in the US aviation sector. Their bars stretch considerably higher, indicating their dominant market share.**
+
+**In stark contrast, Federal Express and JetBlue Airways have bars that are notably shorter. Their counts are less than half of what the top three airlines exhibit, underscoring their more limited operational scale in comparison.**
+
+**The line graph over a 10-year span shows the flight trends of the top five US airport carriers. While United, Delta, and American Airlines competitively maintain their top positions, there's a standout surge for United Airlines between 2011 and 2012, where flights skyrocket from roughly 1,000 to over 2,500, attributable to the merger with Continental Airlines in United Airlines in year 2012 Ref link- [click here](https://airwaysmag.com/continental-united-merger-completed/). Meanwhile, JetBlue Airline exhibits consistent growth, contrasting with a steady decline observed for Federal Express Airline.**
+
+## Top 10 Countries with highest number of flights departing from US
+
+```{r , include = TRUE}
+ggplot(data = top_country_df, aes(x = Country, fill = Country)) +
+   geom_bar() + scale_fill_brewer(palette = "Set3") + labs(title = "Top 10 Countries with highest number of flights from US", x = "Country", y = "Count")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+top_country_df <- us_flight_data %>% group_by(Country)%>%
+  summarise(c_sum=length(Country))
+top_country_df <- top_country_df[order(-top_country_df$c_sum),]%>% top_n(10)
+
+df2 <- top_country_df %>% 
+  mutate(csum = rev(cumsum(rev(c_sum))), 
+         per = round(c_sum/sum(c_sum) * 100,1),
+         test='',
+         pos = c_sum/2 + lead(csum, 1),
+         pos = if_else(is.na(pos), c_sum/2, pos))
+
+ggplot(top_country_df, aes(x = "", y = c_sum, fill = fct_inorder(Country))) +
+  geom_col(width = 1, color = 1) +
+  geom_text(aes(label = df2$test),
+            position = position_stack(vjust = 0.5)) +
+  coord_polar(theta = "y") +
+  guides(fill = guide_legend(title = "Country")) +
+  scale_y_continuous(breaks = df2$pos, labels = df2$test) +
+    geom_label_repel(aes(y = df2$pos, label = paste0(df2$per, "%")), data = top_country_df, size=4, show.legend = F, nudge_x = 0) +
+  theme(axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 10), 
+        panel.background = element_rect(fill = "white"))+ scale_fill_brewer(palette = "Set3")
+```
+<br>
+**The bar chart delineates the top 10 countries with the highest number of flights from the US. On the x-axis, we have the countries listed, while the y-axis quantifies the count of flights attended.**
+
+**Canada towers above the rest with a massive count of around 60,000 flights, closely followed by Mexico with over 40,000 flights. The difference becomes stark as we move to the third spot with the UK, which has close to 15,000 flights. Beyond the UK, the flight count continues to decrease significantly for the remaining countries in the list.**
+
+**Complementing the bar chart, the pie chart visualizes the proportion of flights to these top 10 countries from the US. Canada occupies a dominant 33.3% of the chart, reinforcing its top position in flight counts. Mexico follows with a significant 25% slice. After these two, the rest of the countries share the remaining 41.7%, with each having a noticeably smaller portion compared to Canada and Mexico.**
+
+**Together, these charts provide a clear visual representation of the US's international flight distribution, emphasizing the predominance of Canada and Mexico in terms of flight counts.**
+
 ```{r occurences line}
 
 # Combine the values from both columns into pairs
