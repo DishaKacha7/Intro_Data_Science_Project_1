@@ -1,0 +1,356 @@
+---
+title: "US International Flight Data : Group 4"
+author: "Amit Shendge, Disha Kacha, Rachel Culbreath, Saniya Shinde"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r init, include=F}
+# The package "ezids" (EZ Intro to Data Science) includes some helper functions we developed for the course. 
+# Some of the frequently used functions are loadPkg(), xkabledply(), xkablesummary(), uzscale(), etc.
+# You will need to install it (once) from GitHub.
+# library(devtools)
+# devtools::install_github("physicsland/ezids")
+# Then load the package in your R session.
+library(ezids)
+```
+
+```{r setup, include=FALSE}
+# Some of common RMD options (and the defaults) are: 
+# include=T, eval=T, echo=T, results='hide'/'asis'/'markup',..., collapse=F, warning=T, message=T, error=T, cache=T, fig.width=6, fig.height=4, fig.dim=c(6,4) #inches, fig.align='left'/'center','right', 
+knitr::opts_chunk$set(warning = F, message = F)
+# Can globally set option for number display format.
+options(scientific=T, digits = 3) 
+# options(scipen=9, digits = 3) 
+```
+
+## Introduction
+
+<br>
+The data set our team has selected to focus on is Airline data from 1990-2020. This data set came from kaggle and our group made adaptations in order to amylase the data. Our group selected this data set because we were interested in the way airline data affects all the members of our group. In order to travel home we all have to rely on airline services and want to gain a comprehensive understanding of how airline traffic has changed over the years. This dataset includes a comprehensive analysis of airline traffic that focuses on flights that departed from U.S. gateways. Our group decided to subset the data and focus on the years 2011 through 2020 as this cleaned data allowed us to better analyze the data without there being too many data entries. The data highlights the airplane's departure information including the month, day, year, usg_apt, usg_wac, fg_apt_id, fg_apt, fg_wac, and airlineid. Through these data points we are able to create smart questions that allow us to analyze how the air traffic operates, how it changes, and what we can infer about air traffic with the given data. The analysis of our data included plots, graphs, and calculations that allowed us to gain a comprehensive understanding of the airline traffic. 
+
+```{r read_csv, include = TRUE}
+us_flight_data<-read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/International_Report_Departures_Project_1.csv")
+str(us_flight_data)
+```
+
+```{r sort_columns, include = TRUE}
+us_flight_data <- us_flight_data[order(us_flight_data$Year,us_flight_data$Month),]
+print(us_flight_data)
+```
+
+**We have analyzed the total number of flights per season. Firstly, we calculate the total number of flights per month each year. Then, the total number of flights per season is calculated which is then plotted using a bar chart.**
+
+```{r departure_each_month, include = TRUE}
+departures_each_month <- aggregate(data_dte ~ Year + Month, data = us_flight_data, FUN = length)
+colnames(departures_each_month) <- c("Year","Month","Total_Flights")
+print(departures_each_month)
+```
+
+```{r departures_by_season, include = TRUE}
+season_data <- departures_each_month %>% 
+      mutate(Season = case_when(departures_each_month$Month %in% c(12,1,2) ~ 'Winter',                                       departures_each_month$Month %in% c(3,4,5) ~ 'Spring',
+                                departures_each_month$Month %in% c(6,7,8) ~ 'Summer',
+                                departures_each_month$Month %in% c(9,10,11) ~ 'Fall'))
+
+departure_each_season <- aggregate(Total_Flights ~ Year + Season, data = season_data, FUN = sum)
+departure_each_season
+```
+
+```{r bar_plot, include = TRUE}
+library(ggplot2)
+
+ggplot(departure_each_season, aes(x = Season, y = Total_Flights, fill = Season)) +
+  geom_bar(stat = "identity", width = 0.35) +
+  labs(x = "Season", y = "Total Flights", title = "Total Flights per Season") +
+  scale_fill_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Fall" = "red")) +
+  theme_minimal()
+```
+
+**The bar chart shows the total number of flights for the Fall and Spring seasons are the highest. This maybe due to the spirng and winter breaks. Analyzing the peak seasons is crucial for formulating marketing strategies and infrastructure planning. This could include optimizing the routes, adjusting ticket prices, etc.**
+
+
+**In the graph provided below, we have curated data by extracting values from both the 'USA gate' and 'Foreign gate' columns while including the most frequently occurring pairs. To illustrate this data, we have chosen a line graph as our visualization method, as depicted in the figure.**
+**Our aim in this analysis is to focus on the more common pairings between USA and foreign gates, thereby shedding light on more obvious patterns and relationships in the data.**
+
+```{r occurences line}
+
+# Combine the values from both columns into pairs
+pairs <- paste(us_flight_data$usg_apt, us_flight_data$fg_apt)
+
+# Calculate the occurrences of each unique pair
+pair_counts <- table(pairs)
+
+# Sort the pairs by occurrence in descending order
+sorted_pairs <- names(sort(pair_counts, decreasing = TRUE))
+
+# Select the top 10 pairs
+top_10_pairs <- sorted_pairs[1:10]
+
+# Filter the data to include only the top 10 pairs
+filtered_data <-us_flight_data[pairs %in% top_10_pairs, ]
+
+# Create a line graph for the top 10 pairs
+library(ggplot2)
+ggplot(data = as.data.frame(table(paste(filtered_data$usg_apt, filtered_data$fg_apt))), 
+       aes(x = Var1, y = Freq, group = 1)) +
+  geom_line(color = "dodgerblue", size = 1) +
+  labs(title = "Top 10 Occurrences for Unique Pairs of USG and FG",
+       x = "Pair", y = "Occurrences") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+**In the presented data, the top 10 occurrences of pairs of gates for airlines were analyzed. Notably, Miami emerged as a prominent destination due to its tourist attractions, resulting in high demand for flights. The government has advised both employees and passengers to arrive early at Miami's airport to mitigate crowds and potential delays. Other significant routes in this analysis include Chicago to Toronto and Alaska to Shanghai.**
+
+**This analysis provides valuable insights into travel patterns and can aid in optimizing airport operations and enhancing the passenger experience. The data allows for tracking the highest number of visits based on the airline gate location and destination, aiding in resource allocation and scheduling for more efficient travel management.**
+
+**In R, converting integer variables to factors is a common practice when working with categorical or nominal data. This conversion serves several purposes and can be important for data analysis and visualization. Here are some reasons why you might convert integers to factors:**
+
+**Categorical Representation: Factors are used to represent categorical variables in R. Categorical variables have distinct, non-numeric levels or categories. By converting integers to factors, you specify the categorical nature of the variable.**
+**Analysis and Modeling: When performing statistical analyses or building predictive models, R understands factors as categorical variables, which can have a significant impact on the results. For example, linear regression models interpret factors as a set of binary indicator variables for each level, which is useful for modeling categorical data.**
+**Graphical Presentation: Converting integers to factors is often essential when creating meaningful and informative data visualizations. Many R plotting functions recognize factors and adjust the plot accordingly, making it easier to create categorical plots and interpret the results.**
+**Data Labeling: Factors can be assigned labels or levels, which provide descriptive names for the different categories. This labeling makes it easier to understand and interpret the data in both statistical output and plots.**
+**Data Manipulation: Factors can be useful in data manipulation tasks, such as subsetting or filtering data based on specific categories. Using factors can make these operations more intuitive and efficient.**
+
+**In our analysis below, we began by converting the columns 'carrier group' and 'Year' into factors since they represent categorical variables. The conversion into factors allows us to treat these variables appropriately in our statistical analysis.**
+
+**To explore and visualize the data further, we employed the 'outlierKD2' function. This function facilitated the generation of box plots, histograms, and quantile-quantile (qq) plots for the aforementioned categorical variables. These graphical representations serve as valuable tools to detect outliers and gain insights into the distribution and characteristics of the data.**
+
+**In this analysis, it's evident that the diagrams, both with and without outliers, appear identical. This similarity arises from the fact that categorical values, such as those in 'carrier group' and 'Year,' are not typically used for this type of graphical representation. Furthermore, it's worth noting that no null values were identified in this dataset. This observation highlights the unique nature of the variables being studied and reinforces the absence of missing data points in our analysis.**
+
+```{r Carrier Group}
+library(ezids)
+library(ggplot2)
+#Convert it into factor
+
+us_flight_data$carriergroup <- factor(us_flight_data$carriergroup)
+us_flight_data$Year <- factor(us_flight_data$Year)
+
+
+foreign_out =outlierKD2(us_flight_data,fg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqplt=TRUE)
+us_out =outlierKD2(foreign_out,usg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqplt=TRUE)
+
+complete_data_changes = us_out
+```
+**Carrier Group 0 denotes Foreign Gate whereas 1 denotes USA Gate for all airlines in the data.**
+
+```{r Carrier Group 1}
+foreign_carrier <- subset(complete_data_changes,complete_data_changes$carriergroup==0)
+
+cat("Foreign Carrier are as follows:\n")
+head(foreign_carrier,7)
+
+us_carrier  <- subset(complete_data_changes,complete_data_changes$carriergroup==1)
+
+cat("US Carrier are as follows:\n")
+head(us_carrier,7)
+```
+**The provided contingency table displays the cumulative counts for the usage of US Gates and Foreign Gates spanning the years 2011 to 2020. Notably, a significant decline in counts is evident for the year 2020. This substantial decrease can be attributed to the impact of the COVID-19 pandemic, which had far-reaching effects on travel and aviation during that period. **
+
+```{r Contingency Table}
+
+contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
+row_names <- c("2011", "2012", "2013", "2014", "2015", "2016","2017","2018","2019","2020")
+rownames(contingency_table) <- row_names
+
+col_names <- c("Foreign","US")
+colnames(contingency_table) <- col_names
+
+xkabledply(contingency_table, title="Contingency table")
+```
+**A statistical test for determining the independence or correlation between two or more categorical variables in a contingency table is the chi-square test. By comparing the observed frequencies of the categories to the predicted frequencies in the absence of any link, or if the variables were independent, it is possible to ascertain whether or not there is a significant relationship between these categorical variables.**
+
+**There are two primary formats for the chi-square test:**
+
+**The purpose of the Chi-Square Test of Independence is to ascertain if two categorical variables significantly depend on one another or have a connection. While the alternative hypothesis (Ha) contends that the two variables are dependent, the null hypothesis (H0) holds that they are independent.**
+
+**The Chi-Square Goodness-of-Fit Test evaluates how well the observed frequencies in a single category variable correspond to a given distribution, often an anticipated distribution. It examines if the observed data conforms to the distribution that was predicted.**
+**A chi-square test's result usually contains the following data**
+
+**A measure of the difference between actual and predicted frequencies is the Chi-Square Statistic (χ²). A greater discrepancy is indicated by a higher chi-square value.**
+**Degrees of Freedom (df): The p-value and critical values are computed using the degrees of freedom, which are based on the number of categories in each variable.**
+**p-Value: For the chi-square goodness-of-fit test or the chi-square test of independence, the p-value represents the likelihood of seeing the data under the assumptions of independence and goodness-of-fit, respectively. A low p-value (usually less than 0.05) indicates evidence that defies the null hypothesis.**
+**predicted Frequencies: In the event that there is no relationship, these are the predicted frequencies in each cell of the contingency table. In order to compute the chi-square statistic, they are compared to the observed frequencies.**
+**Test Results: Depending on the p-value, you can either successfully reject the null hypothesis (if p is greater than the selected significance threshold) or not.**
+**Effect Size: To gauge the magnitude of the relationship or its effect size, other statistics such as the Cramer's V or Phi coefficient may be included in some circumstances.**
+
+```{r Chi-square}
+contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
+
+chi_squared_test <- chisq.test(contingency_table)
+
+
+print(chi_squared_test)
+```
+**Crucial details on the test's outcomes are provided by the output "X-squared = 1643.6, df = 9, p-value < 2.2e-16" obtained from a chi-square test. Let's examine the meaning of each value in detail:**
+
+**X-squared (2): The chi-square statistic (X-squared) is a gauge of the difference between the contingency table's observed and predicted frequencies. The X-squared value in your case is 1643.6. This suggests a significant departure between the observed data and what would be predicted if independence were assumed. An increased X-squared value indicates a more robust correlation or departure from independence.**
+
+**Degrees of Freedom (df): df = 9 in your case. The number of degrees of freedom utilized in the chi-square distribution is represented by degrees of freedom. The number of categories in the variables under analysis determines how it is calculated. In this instance, df = 9 indicates that the chi-square distribution has nine degrees of freedom.**
+
+**p-value: < 2.2e-16: An important result of the chi-square test is the p-value. Given the assumption of independence, it shows the likelihood of observing the data. The p-value in your example is p < 0.001, which is very small, almost equal to zero. This indicates that, given the null hypothesis of independence, it is extremely unlikely that the observed data happened by accident. Consequently, you would normally come to the conclusion that there is a statistically significant association between the variables and reject the null hypothesis.**
+
+**In conclusion, the data shows that the variables under study have a substantial and statistically significant relationship. The remarkably small p-value (< 0.001) and the large chi-square statistic (X-squared) indicate that there is a significant deviation between the observed data and the expected value if the variables were independent. The test's chi-square distribution can be learned more about from the degrees of freedom (df).**
+
+```{r flights_year_carriergroup, include = TRUE}
+total_flights <- aggregate(Total ~ Year + carriergroup, us_flight_data, sum)
+```
+
+```{r bar_chart, include = TRUE}
+ggplot(total_flights, aes(x = factor(Year), y = Total, fill = factor(carriergroup))) +
+       geom_bar(stat = "identity",position = "dodge") +
+      labs(x = "Year", y = "Total Flights", title = "Total Flights by Year and Carrier Group") +
+      scale_fill_manual(values = c("0" = "red", "1" = "blue"), 
+                labels = c("Foreign Carrier", "Domestic Carrier"),
+                       name = "Carrier Group") +
+      theme_minimal() 
+```
+
+**The bar chart above shows the total number of flight of domestic and foreign carriers for each year. We can see that the total number of flights of domestic carriers than foreign carriers for each year. This maybe because domestic carriers have well established infrastructure at various airports across the country, making it easier for them to operate more flights. Also, domestic carriers have lower operational costs within USA as compared to foreign carriers.**
+
+## Introduction
+
+<br>
+The data set our team has selected to focus on is Airline data from 1990-2020. This dataset includes a comprehensive analysis of airline traffic that focuses on flights that departed from U.S. gateways. The data highlights the airplane's departure information including the month, day, year, usg_apt, usg_wac, fg_apt_id, fg_apt, fg_wac, and airlineid. Through these data points we are able to create smart questions that allow us to analyze how the air traffic operates, how it changes, and what we can infer about air traffic with the given data. The analysis of our data included plots, graphs, and calculations that allowed us to gain a comprehensive understanding of the airline traffic.
+
+```{r}
+library(dplyr) 
+library(ggplot2)
+library(ezids)
+library(RColorBrewer)
+flight_data <- read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
+str(flight_data)
+
+```
+## Introduction
+
+<br>
+The data set our team has selected to focus on is Airline data from 1990-2020. This dataset includes a comprehensive analysis of airline traffic that focuses on flights that departed from U.S. gateways. The data highlights the airplane's departure information including the month, day, year, usg_apt, usg_wac, fg_apt_id, fg_apt, fg_wac, and airlineid. Through these data points we are able to create smart questions that allow us to analyze how the air traffic operates, how it changes, and what we can infer about air traffic with the given data. The analysis of our data included plots, graphs, and calculations that allowed us to gain a comprehensive understanding of the airline traffic.
+
+```{r}
+library(dplyr) 
+library(ggplot2)
+library(ezids)
+library(RColorBrewer)
+flight_data <- read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
+str(flight_data)
+
+```
+
+## Including Plots
+<br>
+We chose to analyze: How has airline travel progressed and what changes have been made in services throughout the years. Through the analysis of this data we were able to do calculations to determine how airline departures have changed throughout the years. In this project some of the calculations that were performed consisted of mathematical equations, charts to represent the data, and making comparisons using the resulting data. For the year we calculated the rate of change to be able to determine how airline departures have changed over the years. Through this we were able to see that outside circumstances affect the flight departures. Viewers are able to see how the year 2020 affected the flight industry because there was a 78 percent decrease in departing international flights. This can be seen because due to the inability to make frequent flights in the spring, summer, and winter season it added to the steep decline in the airline industry. During the peak departures reached around 38,000 in 2018 followed by a decrease in airline data. This data allowed us to determine which airport had the highest number of flights to depart. This airport code for the largest number of departing flights is ZZZ. This airport is a small sea airport that is used primarily as a refueling point for departing flights in the U.S. This contributed to the large volume of flights that depart from this airport. Through the analysis of this data it was interesting to see how the air traffic in and out of this airport remained consistent throughout the years. 
+
+
+
+```{r}
+year <- flight_data[order(flight_data$Year,flight_data$Month),]
+
+```
+
+<br> 
+The flight count per year graph allows viewers to gain a comprehensive understanding of how airline traffic has changed from 2011 to 2020. In the year 2018 the airline data reaches a peak amount of flights. There were 39926 flights that departed in 2018 and this shows us how the industry has developed. This airline departure data allows us to see how events happening in the world affect the amount of airline travel. This can be seen in the chart of the year 2020 as the pandemic resulted in decreased airline travel during some of the busiest times to travel. The number of flights fell to 9650 and this is due to the suspension of airline travel.  
+
+```{r }
+
+ggplot(data = year, aes(x = factor(Year), fill = factor(Year))) +
+   geom_bar() + scale_fill_brewer(palette = "Set3") + labs(title = "Flight Count per Year", x = "Year", y = "Count")
+
+```
+
+```{r }
+mx <- max(year$usg_apt)
+print(mx)
+
+mn <- min(year$usg_apt)
+print(mn)
+```
+
+```{r }
+dta2011 <- subset(year, Year == '2011')
+count(dta2011)
+
+dta2012 <- subset(year, Year == '2012')
+count(dta2012)
+
+dta2013 <- subset(year, Year == '2013')
+count(dta2013)
+
+dta2014 <- subset(year, Year == '2014')
+count(dta2014)
+
+dta2015 <- subset(year, Year == '2015')
+count(dta2015)
+
+dta2016 <- subset(year, Year == '2016')
+count(dta2016)
+
+dta2017 <- subset(year, Year == '2017')
+count(dta2017)
+
+dta2018 <- subset(year, Year == '2018')
+count(dta2018)
+
+dta2019 <- subset(year, Year == '2019')
+count(dta2019)
+
+dta2020 <- subset(year, Year == '2020')
+count(dta2020)
+```
+
+```{r }
+mxairport <- subset(year, usg_apt == 'ZZZ')
+#print(mxairport)
+
+minairport <- subset(year, usg_apt == '1B1')
+#print(minairport)
+
+mxcount <- count(mxairport)
+mincount <- count(minairport)
+print(mxcount)
+print(mincount)
+```
+
+```{r }
+
+ggplot(data = mxairport, aes(x = factor(Year), fill = factor(Year))) +
+   geom_bar() + scale_fill_brewer(palette = "Set3") + labs(title = "Largest airport departure Count per Year", x = "Year", y = "Count")
+
+```
+
+```{r }
+chisq.test(year$Year, year$usg_apt)
+
+```
+
+#Conclusion:
+
+**In conclusion, our exploratory data analysis has provided valuable insights into the complex world of flight patterns, airline utilization, and the impact of various factors in the aviation industry. Through a comprehensive examination of pre-2020 data, we have uncovered significant trends and patterns that shed light on the dynamics of this dynamic field.**
+
+**We found that flight patterns are far from static. They evolve over time, influenced by a multitude of factors such as seasonality, geography, and the choices of both passengers and airlines. The data has allowed us to map out the intricate web of flight routes and the regions of highest aviation activity, offering a unique perspective on the industry's  flow.**
+
+**Seasonal variations were evident, emphasizing the critical role that weather, holidays, and other seasonal factors play in shaping the aviation landscape. We also gained a profound understanding of the airports that served as crucial nodes in this intricate network, with major hubs and regional airports playing distinct roles in the travel ecosystem.**
+
+**Furthermore, the analysis of airline data has enabled us to discern market dynamics, customer preferences, and the competitive forces that drive the industry forward. The insights gained from this data offer valuable information for aviation companies, policymakers, and travelers alike.**
+
+##Future Scope:
+
+**Looking ahead, our research is poised for further expansion and depth. The next phase of our investigation involves gathering and analyzing data from the post-pandemic period, commencing in 2020. This expansion into the recent years presents an exciting opportunity to evaluate how the aviation industry has coped with the unparalleled challenges brought about by the global pandemic.**
+
+**We aim to explore and document the profound impacts of the pandemic on the aviation sector. This includes understanding how airlines have adapted to the new normal, how passenger behavior has evolved, and the extent of the industry's recovery efforts. Our research will provide a holistic view of the transformations in the aviation industry, yielding insights that are relevant to not only industry stakeholders but also to the broader public and policymakers.**
+
+
+
+
+
+
+
