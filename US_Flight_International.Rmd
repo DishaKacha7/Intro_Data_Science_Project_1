@@ -40,21 +40,21 @@ options(scientific=T, digits = 3)
 The data set our team has selected to focus on is Airline data from 1990-2020. This data set came from kaggle and our group made adaptations in order to amylase the data. Our group selected this data set because we were interested in the way airline data affects all the members of our group. In order to travel home we all have to rely on airline services and want to gain a comprehensive understanding of how airline traffic has changed over the years. This dataset includes a comprehensive analysis of airline traffic that focuses on flights that departed from U.S. gateways. Our group decided to subset the data and focus on the years 2011 through 2020 as this cleaned data allowed us to better analyze the data without there being too many data entries. The data highlights the airplane's departure information including the month, day, year, usg_apt, usg_wac, fg_apt_id, fg_apt, fg_wac, and airlineid. Through these data points we are able to create smart questions that allow us to analyze how the air traffic operates, how it changes, and what we can infer about air traffic with the given data. The analysis of our data included plots, graphs, and calculations that allowed us to gain a comprehensive understanding of the airline traffic. 
 
 ```{r read_csv, include = TRUE}
-us_flight_data<-read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
+us_flight_data<-read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/International_Report_Departures_Project_1.csv")
 str(us_flight_data)
 ```
 
 ```{r sort_columns, include = TRUE}
 us_flight_data <- us_flight_data[order(us_flight_data$Year,us_flight_data$Month),]
-print(us_flight_data)
 ```
+
+## Total Number of Flights Per Season
 
 **We have analyzed the total number of flights per season. Firstly, we calculate the total number of flights per month each year. Then, the total number of flights per season is calculated which is then plotted using a bar chart.**
 
 ```{r departure_each_month, include = TRUE}
 departures_each_month <- aggregate(data_dte ~ Year + Month, data = us_flight_data, FUN = length)
 colnames(departures_each_month) <- c("Year","Month","Total_Flights")
-print(departures_each_month)
 ```
 
 ```{r departures_by_season, include = TRUE}
@@ -64,7 +64,6 @@ season_data <- departures_each_month %>%
                                 departures_each_month$Month %in% c(9,10,11) ~ 'Fall'))
 
 departure_each_season <- aggregate(Total_Flights ~ Year + Season, data = season_data, FUN = sum)
-departure_each_season
 ```
 
 ```{r bar_plot, include = TRUE}
@@ -120,7 +119,7 @@ country_counts <- table(top_country_df$Country)
 top_country_df$Country <- factor(top_country_df$Country, levels = names(sort(country_counts, decreasing = TRUE)))
 ```
 
-## Top 5 Crriers with highest number of flights departing from US
+## Top 5 Carriers with highest number of flights departing from US
 
 ```{r , include = TRUE}
 library(ggrepel)
@@ -299,6 +298,8 @@ print(chi_squared_test)
 **p-value: < 2.2e-16: An important result of the chi-square test is the p-value. Given the assumption of independence, it shows the likelihood of observing the data. The p-value in your example is p < 0.001, which is very small, almost equal to zero. This indicates that, given the null hypothesis of independence, it is extremely unlikely that the observed data happened by accident. Consequently, you would normally come to the conclusion that there is a statistically significant association between the variables and reject the null hypothesis.**
 
 **In conclusion, the data shows that the variables under study have a substantial and statistically significant relationship. The remarkably small p-value (< 0.001) and the large chi-square statistic (X-squared) indicate that there is a significant deviation between the observed data and the expected value if the variables were independent. The test's chi-square distribution can be learned more about from the degrees of freedom (df).**
+
+## Total Number of Flights Per Carrier
 
 ```{r flights_year_carriergroup, include = TRUE}
 total_flights <- aggregate(Total ~ Year + carriergroup, us_flight_data, sum)
