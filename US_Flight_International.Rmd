@@ -332,6 +332,21 @@ chisq.test(year$Year, year$usg_apt)
 
 ```
 
+#Conclusion:
+
+**In conclusion, our exploratory data analysis has provided valuable insights into the complex world of flight patterns, airline utilization, and the impact of various factors in the aviation industry. Through a comprehensive examination of pre-2020 data, we have uncovered significant trends and patterns that shed light on the dynamics of this dynamic field.**
+
+**We found that flight patterns are far from static. They evolve over time, influenced by a multitude of factors such as seasonality, geography, and the choices of both passengers and airlines. The data has allowed us to map out the intricate web of flight routes and the regions of highest aviation activity, offering a unique perspective on the industry's  flow.**
+
+**Seasonal variations were evident, emphasizing the critical role that weather, holidays, and other seasonal factors play in shaping the aviation landscape. We also gained a profound understanding of the airports that served as crucial nodes in this intricate network, with major hubs and regional airports playing distinct roles in the travel ecosystem.**
+
+**Furthermore, the analysis of airline data has enabled us to discern market dynamics, customer preferences, and the competitive forces that drive the industry forward. The insights gained from this data offer valuable information for aviation companies, policymakers, and travelers alike.**
+
+##Future Scope:
+
+**Looking ahead, our research is poised for further expansion and depth. The next phase of our investigation involves gathering and analyzing data from the post-pandemic period, commencing in 2020. This expansion into the recent years presents an exciting opportunity to evaluate how the aviation industry has coped with the unparalleled challenges brought about by the global pandemic.**
+
+**We aim to explore and document the profound impacts of the pandemic on the aviation sector. This includes understanding how airlines have adapted to the new normal, how passenger behavior has evolved, and the extent of the industry's recovery efforts. Our research will provide a holistic view of the transformations in the aviation industry, yielding insights that are relevant to not only industry stakeholders but also to the broader public and policymakers.**
 
 
 
