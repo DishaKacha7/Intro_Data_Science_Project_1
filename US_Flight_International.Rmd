@@ -76,7 +76,7 @@ ggplot(departure_each_season, aes(x = Season, y = Total_Flights, fill = Season))
   theme_minimal()
 ```
 
-**The bar chart shows the total number of flights for the Fall and Spring seasons are the highest. This maybe due to the spirng and winter breaks. Analyzing the peak seasons is crucial for formulating marketing strategies and infrastructure planning. This could include optimizing the routes, adjusting ticket prices, etc.**
+**The bar chart shows the total number of flights for the Fall and Spring seasons are the highest. This maybe due to the spring and fall breaks. Analyzing the peak seasons is crucial for formulating marketing strategies and infrastructure planning. This could include optimizing the routes, adjusting ticket prices, etc.**
 
 
 **In the graph provided below, we have curated data by extracting values from both the 'USA gate' and 'Foreign gate' columns while including the most frequently occurring pairs. To illustrate this data, we have chosen a line graph as our visualization method, as depicted in the figure.**
