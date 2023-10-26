@@ -180,6 +180,7 @@ ggplot(top_country_df, aes(x = "", y = c_sum, fill = fct_inorder(Country))) +
 
 **Together, these charts provide a clear visual representation of the US's international flight distribution, emphasizing the predominance of Canada and Mexico in terms of flight counts.**
 
+## Top 10 occurences of same US and Foreign gates in pairs
 ```{r occurences line}
 
 # Combine the values from both columns into pairs
