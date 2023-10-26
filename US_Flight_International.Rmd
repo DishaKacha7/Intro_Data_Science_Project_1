@@ -39,7 +39,7 @@ options(scientific=T, digits = 3)
 The data set our team has selected to focus on is Airline data from 1990-2020. This data set came from kaggle and our group made adaptations in order to amylase the data. Our group selected this data set because we were interested in the way airline data affects all the members of our group. In order to travel home we all have to rely on airline services and want to gain a comprehensive understanding of how airline traffic has changed over the years. This dataset includes a comprehensive analysis of airline traffic that focuses on flights that departed from U.S. gateways. Our group decided to subset the data and focus on the years 2011 through 2020 as this cleaned data allowed us to better analyze the data without there being too many data entries. The data highlights the airplane's departure information including the month, day, year, usg_apt, usg_wac, fg_apt_id, fg_apt, fg_wac, and airlineid. Through these data points we are able to create smart questions that allow us to analyze how the air traffic operates, how it changes, and what we can infer about air traffic with the given data. The analysis of our data included plots, graphs, and calculations that allowed us to gain a comprehensive understanding of the airline traffic. 
 
 ```{r read_csv, include = TRUE}
-us_flight_data<-read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/International_Report_Departures_Project_1.csv")
+us_flight_data<-read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
 str(us_flight_data)
 ```
 
@@ -217,32 +217,12 @@ ggplot(total_flights, aes(x = factor(Year), y = Total, fill = factor(carriergrou
 
 **The bar chart above shows the total number of flight of domestic and foreign carriers for each year. We can see that the total number of flights of domestic carriers than foreign carriers for each year. This maybe because domestic carriers have well established infrastructure at various airports across the country, making it easier for them to operate more flights. Also, domestic carriers have lower operational costs within USA as compared to foreign carriers.**
 
-## Introduction
-
-<br>
-The data set our team has selected to focus on is Airline data from 1990-2020. This dataset includes a comprehensive analysis of airline traffic that focuses on flights that departed from U.S. gateways. The data highlights the airplane's departure information including the month, day, year, usg_apt, usg_wac, fg_apt_id, fg_apt, fg_wac, and airlineid. Through these data points we are able to create smart questions that allow us to analyze how the air traffic operates, how it changes, and what we can infer about air traffic with the given data. The analysis of our data included plots, graphs, and calculations that allowed us to gain a comprehensive understanding of the airline traffic.
 
 ```{r}
 library(dplyr) 
 library(ggplot2)
 library(ezids)
 library(RColorBrewer)
-flight_data <- read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
-str(flight_data)
-
-```
-## Introduction
-
-<br>
-The data set our team has selected to focus on is Airline data from 1990-2020. This dataset includes a comprehensive analysis of airline traffic that focuses on flights that departed from U.S. gateways. The data highlights the airplane's departure information including the month, day, year, usg_apt, usg_wac, fg_apt_id, fg_apt, fg_wac, and airlineid. Through these data points we are able to create smart questions that allow us to analyze how the air traffic operates, how it changes, and what we can infer about air traffic with the given data. The analysis of our data included plots, graphs, and calculations that allowed us to gain a comprehensive understanding of the airline traffic.
-
-```{r}
-library(dplyr) 
-library(ggplot2)
-library(ezids)
-library(RColorBrewer)
-flight_data <- read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
-str(flight_data)
 
 ```
 
@@ -253,7 +233,7 @@ We chose to analyze: How has airline travel progressed and what changes have bee
 
 
 ```{r}
-year <- flight_data[order(flight_data$Year,flight_data$Month),]
+year <- us_flight_data[order(us_flight_data$Year,us_flight_data$Month),]
 
 ```
 
@@ -306,6 +286,23 @@ count(dta2019)
 dta2020 <- subset(year, Year == '2020')
 count(dta2020)
 ```
+<br>
+A t test was preformed in order to see if the values can be compared. The values we have selected to compare are flight months and schedules in 2018 and flight months and schedules in 2016. Through analysis of the t-test we are able to see there are slight differences in the mean of the data for the years in question. This data allows use to get a better understanding of what we are looking at and we can infer that one data set is larger than the other as this will affect the mean of the data set. 
+
+```{r }
+t2 = t.test(dta2018$Scheduled, conf.level = 0.05)
+print(t2)
+
+m2 = t.test(dta2018$Month, conf.level = 0.05)
+print(m2)
+
+t6 = t.test(dta2016$Scheduled, conf.level = 0.05)
+print(t6)
+
+m6 = t.test(dta2016$Month, conf.level = 0.05)
+print(m6)
+
+```
 
 ```{r }
 mxairport <- subset(year, usg_apt == 'ZZZ')
@@ -320,13 +317,19 @@ print(mxcount)
 print(mincount)
 ```
 
+
+<br> 
+As stated above this table represents the airport with the most departures of the 9 years. This tables allows viewers to see how 
+the frequently the airport was used and reflects the airports growth right before the pandemic hit haulting all major airline traffic. 
+
 ```{r }
 
 ggplot(data = mxairport, aes(x = factor(Year), fill = factor(Year))) +
    geom_bar() + scale_fill_brewer(palette = "Set3") + labs(title = "Largest airport departure Count per Year", x = "Year", y = "Count")
 
 ```
-
+<br>
+A chi squared test was preformed to infer if year and usg_apt are independent variables or if they are dependent on each other. 
 ```{r }
 chisq.test(year$Year, year$usg_apt)
 
@@ -347,7 +350,6 @@ chisq.test(year$Year, year$usg_apt)
 **Looking ahead, our research is poised for further expansion and depth. The next phase of our investigation involves gathering and analyzing data from the post-pandemic period, commencing in 2020. This expansion into the recent years presents an exciting opportunity to evaluate how the aviation industry has coped with the unparalleled challenges brought about by the global pandemic.**
 
 **We aim to explore and document the profound impacts of the pandemic on the aviation sector. This includes understanding how airlines have adapted to the new normal, how passenger behavior has evolved, and the extent of the industry's recovery efforts. Our research will provide a holistic view of the transformations in the aviation industry, yielding insights that are relevant to not only industry stakeholders but also to the broader public and policymakers.**
-
 
 
 
