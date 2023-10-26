@@ -75,7 +75,6 @@ ggplot()+geom_line(data=tt ,
 ggplot(data=top_carrier_df, aes(x=reorder(Carrier_Name,-a_sum),y=a_sum)) +
 geom_bar(stat="identity") 
 
-
 ggplot(data=top_country_df, aes(x=reorder(Country,-c_sum),y=c_sum)) +
 geom_bar(stat="identity") 
 
