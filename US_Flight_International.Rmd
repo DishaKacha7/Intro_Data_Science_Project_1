@@ -214,18 +214,12 @@ ggplot(data = as.data.frame(table(paste(filtered_data$usg_apt, filtered_data$fg_
 
 **In R, converting integer variables to factors is a common practice when working with categorical or nominal data. This conversion serves several purposes and can be important for data analysis and visualization. Here are some reasons why you might convert integers to factors:**
 
-**Categorical Representation: Factors are used to represent categorical variables in R. Categorical variables have distinct, non-numeric levels or categories. By converting integers to factors, you specify the categorical nature of the variable.**
-**Analysis and Modeling: When performing statistical analyses or building predictive models, R understands factors as categorical variables, which can have a significant impact on the results. For example, linear regression models interpret factors as a set of binary indicator variables for each level, which is useful for modeling categorical data.**
-**Graphical Presentation: Converting integers to factors is often essential when creating meaningful and informative data visualizations. Many R plotting functions recognize factors and adjust the plot accordingly, making it easier to create categorical plots and interpret the results.**
-**Data Labeling: Factors can be assigned labels or levels, which provide descriptive names for the different categories. This labeling makes it easier to understand and interpret the data in both statistical output and plots.**
-**Data Manipulation: Factors can be useful in data manipulation tasks, such as subsetting or filtering data based on specific categories. Using factors can make these operations more intuitive and efficient.**
-
 **In our analysis below, we began by converting the columns 'carrier group' and 'Year' into factors since they represent categorical variables. The conversion into factors allows us to treat these variables appropriately in our statistical analysis.**
 
 **To explore and visualize the data further, we employed the 'outlierKD2' function. This function facilitated the generation of box plots, histograms, and quantile-quantile (qq) plots for the aforementioned categorical variables. These graphical representations serve as valuable tools to detect outliers and gain insights into the distribution and characteristics of the data.**
 
 **In this analysis, it's evident that the diagrams, both with and without outliers, appear identical. This similarity arises from the fact that categorical values, such as those in 'carrier group' and 'Year,' are not typically used for this type of graphical representation. Furthermore, it's worth noting that no null values were identified in this dataset. This observation highlights the unique nature of the variables being studied and reinforces the absence of missing data points in our analysis.**
-
+##Checking any null values or outliers
 ```{r Carrier Group}
 library(ezids)
 library(ggplot2)
@@ -241,7 +235,7 @@ us_out =outlierKD2(foreign_out,usg_wac,rm=TRUE,boxplt=TRUE,histogram = TRUE,qqpl
 complete_data_changes = us_out
 ```
 **Carrier Group 0 denotes Foreign Gate whereas 1 denotes USA Gate for all airlines in the data.**
-
+## Creating Subset of Carrier Group column
 ```{r Carrier Group 1}
 foreign_carrier <- subset(complete_data_changes,complete_data_changes$carriergroup==0)
 
@@ -255,6 +249,7 @@ head(us_carrier,7)
 ```
 **The provided contingency table displays the cumulative counts for the usage of US Gates and Foreign Gates spanning the years 2011 to 2020. Notably, a significant decline in counts is evident for the year 2020. This substantial decrease can be attributed to the impact of the COVID-19 pandemic, which had far-reaching effects on travel and aviation during that period. **
 
+# Contingency table giving total counts of departures in US and Foreign gate per year.
 ```{r Contingency Table}
 
 contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
@@ -273,15 +268,8 @@ xkabledply(contingency_table, title="Contingency table")
 **The purpose of the Chi-Square Test of Independence is to ascertain if two categorical variables significantly depend on one another or have a connection. While the alternative hypothesis (Ha) contends that the two variables are dependent, the null hypothesis (H0) holds that they are independent.**
 
 **The Chi-Square Goodness-of-Fit Test evaluates how well the observed frequencies in a single category variable correspond to a given distribution, often an anticipated distribution. It examines if the observed data conforms to the distribution that was predicted.**
-**A chi-square test's result usually contains the following data**
 
-**A measure of the difference between actual and predicted frequencies is the Chi-Square Statistic (χ²). A greater discrepancy is indicated by a higher chi-square value.**
-**Degrees of Freedom (df): The p-value and critical values are computed using the degrees of freedom, which are based on the number of categories in each variable.**
-**p-Value: For the chi-square goodness-of-fit test or the chi-square test of independence, the p-value represents the likelihood of seeing the data under the assumptions of independence and goodness-of-fit, respectively. A low p-value (usually less than 0.05) indicates evidence that defies the null hypothesis.**
-**predicted Frequencies: In the event that there is no relationship, these are the predicted frequencies in each cell of the contingency table. In order to compute the chi-square statistic, they are compared to the observed frequencies.**
-**Test Results: Depending on the p-value, you can either successfully reject the null hypothesis (if p is greater than the selected significance threshold) or not.**
-**Effect Size: To gauge the magnitude of the relationship or its effect size, other statistics such as the Cramer's V or Phi coefficient may be included in some circumstances.**
-
+## Chi-Square test using Year and Carrier Group
 ```{r Chi-square}
 contingency_table <- table(complete_data_changes$Year, complete_data_changes$carriergroup)
 
