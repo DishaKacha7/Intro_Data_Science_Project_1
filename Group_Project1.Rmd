@@ -12,7 +12,6 @@ library(ezids)
 library(RColorBrewer)
 ```
 
-
 ```{r }
 flight_data <- read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
 str(flight_data)
