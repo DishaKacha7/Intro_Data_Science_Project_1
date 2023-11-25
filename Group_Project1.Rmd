@@ -16,10 +16,7 @@ library(RColorBrewer)
 flight_data <- read.csv("/Users/rachelculbreath/Desktop/International_Report_Departures_Project_1.csv")
 str(flight_data)
 
-
-
 ```
-
 
 ```{r }
 year <- flight_data[order(flight_data$Year,flight_data$Month),]
