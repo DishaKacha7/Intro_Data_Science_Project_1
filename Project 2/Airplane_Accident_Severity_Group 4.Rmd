@@ -109,3 +109,19 @@ We can see greater variability in the safety score of airplanes having significa
 Airplanes having Significant_Damage_and_Fatalities severity have the highest safety score.
 
 For checking whether the number of violations is a factor that leads to an increased risk for plane crashes based on severity, we are using the analysis of variance (ANOVA) test. The ANOVA test will help us determine if there are significant differences in the mean number of violations across different levels of the severity factor.
+
+Null Hypothesis (H0) : There is no significant difference in the mean number of violations among different severity levels.
+
+Alternative Hypothesis(H1) : There is a significant difference in the mean number of violations among at least two severity levels
+
+```{r ANOVA, include = TRUE}
+# Perform ANOVA
+anova_result <- aov(Violations ~ Severity, data = airplane)
+
+# Print the ANOVA summary
+summary(anova_result)
+```
+
+The small p-value (2e-11) indicates that there is strong evidence to reject the null hypothesis.
+There is a significant difference in the mean number of violations among at least two severity levels.
+The F value of 17.3 is relatively large, further supporting the evidence of a significant difference. Therefore, based on the ANOVA test, it appears that the number of violations is a factor associated with an increased risk for plane crashes based on severity.
