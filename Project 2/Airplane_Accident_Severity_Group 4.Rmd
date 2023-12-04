@@ -61,3 +61,7 @@ Days_Since_Inspection : how long the plane went without inspection before the in
 Safety_Score : a measure of how safe the plane was deemed to be 
 Violations : number of violations that the aircraft received during inspections 
 Severity : a description (4 level factor) on the severity of the crash 
+
+```{r reading_csv, include = TRUE}
+airplane = read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/Project 2/train.csv")
+```
