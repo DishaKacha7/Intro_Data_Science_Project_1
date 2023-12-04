@@ -163,4 +163,21 @@ scaled_data <- scale(numeric_data)
 testing[, numeric_columns] <- scaled_data
 ```
 
+```{r smv_model, include = TRUE}
+svm_model <- svm(Severity ~ Accident_Type_Code + Safety_Score + Control_Metric + Days_Since_Inspection , data = training, kernel = "radial",C=100,gamma=5)
+# Assuming 'Severity' is the target variable in the test data
+actual <- testing$Severity
+# Make predictions on test data
+predicted <- predict(svm_model, newdata = testing)
+
+#Creating confusion matrix
+conf_matrix <- confusionMatrix(data = predicted, reference = actual)
+print(conf_matrix)
+
+# Evaluate model accuracy
+accuracy <- sum(predicted == actual) / length(actual)
+accuracy_percentage <- sprintf("%.2f", accuracy * 100)
+print(paste("Accuracy:", paste(accuracy_percentage, "%", sep = "")))
+```
+
 
