@@ -147,3 +147,20 @@ intrain <- createDataPartition(y = airplane$Severity, p= 0.8, list = FALSE)
 training <- airplane[intrain,]
 testing <- airplane[-intrain,]
 ```
+
+```{r scaling_numerical_Columns, include = TRUE}
+numeric_columns <- sapply(training, is.numeric)
+numeric_data <- training[, numeric_columns]
+# Scale the numeric features
+scaled_data <- scale(numeric_data)
+# Replacing the scaled values in the original dataframe
+training[, numeric_columns] <- scaled_data
+numeric_columns <- sapply(testing, is.numeric)
+numeric_data <- testing[, numeric_columns]
+# Scale the numeric features
+scaled_data <- scale(numeric_data)
+# Replacing the scaled values in the original dataframe
+testing[, numeric_columns] <- scaled_data
+```
+
+
