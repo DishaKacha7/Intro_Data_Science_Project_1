@@ -90,3 +90,4 @@ We can see from the above plot that most of the airplane crashes were highly fat
 qqnorm(airplane$Safety_Score, main="Q-Q Plot for Safety_Score") 
 qqline(airplane$Safety_Score)
 ```
+The Q-Q Plot shows that the data for Safety_Score is normally distributed with the presence of few outliers.
