@@ -125,3 +125,10 @@ summary(anova_result)
 The small p-value (2e-11) indicates that there is strong evidence to reject the null hypothesis.
 There is a significant difference in the mean number of violations among at least two severity levels.
 The F value of 17.3 is relatively large, further supporting the evidence of a significant difference. Therefore, based on the ANOVA test, it appears that the number of violations is a factor associated with an increased risk for plane crashes based on severity.
+
+```{r post_hoc_tukey_hsd, include  = TRUE}
+tukeyviolationAoV <- TukeyHSD(anova_result)
+tukeyviolationAoV
+```  
+The severity levels "Highly_Fatal_And_Damaging" and "Minor_Damage_And_Injuries" are not significantly different in terms of violations. However, "Highly_Fatal_And_Damaging" has significantly higher mean violations compared to the other severity levels, and there are significant differences between "Significant_Damage_And_Fatalities" and "Significant_Damage_And_Serious_Injuries."
+
