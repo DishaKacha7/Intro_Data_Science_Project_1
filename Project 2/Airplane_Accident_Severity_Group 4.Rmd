@@ -65,3 +65,7 @@ Severity : a description (4 level factor) on the severity of the crash
 ```{r reading_csv, include = TRUE}
 airplane = read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/Project 2/train.csv")
 ```
+
+```{r factoring_variables, include  = TRUE}
+airplane$Severity <- as.factor(airplane$Severity)
+```
