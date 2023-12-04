@@ -86,3 +86,7 @@ ggplot(airplane, aes(x = Severity, fill = Severity)) +
 
 We can see from the above plot that most of the airplane crashes were highly fatal and damaging. There is a slight class imabalance with Significant_Damage_And_Fatalities having fewer records.
 
+```{r qqplot_safetyscore, include = TRUE}
+qqnorm(airplane$Safety_Score, main="Q-Q Plot for Safety_Score") 
+qqline(airplane$Safety_Score)
+```
