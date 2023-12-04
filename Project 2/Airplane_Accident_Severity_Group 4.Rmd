@@ -132,3 +132,9 @@ tukeyviolationAoV
 ```  
 The severity levels "Highly_Fatal_And_Damaging" and "Minor_Damage_And_Injuries" are not significantly different in terms of violations. However, "Highly_Fatal_And_Damaging" has significantly higher mean violations compared to the other severity levels, and there are significant differences between "Significant_Damage_And_Fatalities" and "Significant_Damage_And_Serious_Injuries."
 
+```{r correlation_plot, include  = TRUE}
+correlation_value <- cor(airplane$Days_Since_Inspection, airplane$Safety_Score)
+print(correlation_value)
+```
+
+A correlation of -0.685 suggests that there is a meaningful relationship between the number of days since inspection and the safety score. It seems that, as the time since the last inspection increases, there is a tendency for the safety score to decrease.
