@@ -69,3 +69,7 @@ airplane = read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I
 ```{r factoring_variables, include  = TRUE}
 airplane$Severity <- as.factor(airplane$Severity)
 ```
+
+```{r unique_severity, include = TRUE}
+unique(airplane$Severity)
+```
