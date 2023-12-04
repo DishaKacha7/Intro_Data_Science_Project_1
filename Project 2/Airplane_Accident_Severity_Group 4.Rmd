@@ -91,3 +91,17 @@ qqnorm(airplane$Safety_Score, main="Q-Q Plot for Safety_Score")
 qqline(airplane$Safety_Score)
 ```
 The Q-Q Plot shows that the data for Safety_Score is normally distributed with the presence of few outliers.
+
+```{r safety_score_severity_boxplot, include  = TRUE}
+ggplot(airplane, aes(x = Severity, y = Safety_Score, fill = Severity)) +
+  geom_boxplot(outlier.shape = 4, outlier.color = 'green', outlier.size = 3) +
+  labs(title = "Boxplot Showing Safety Score Distribution", x = "Severity", y = "Safety Score") +
+  theme_minimal() +  # Apply the 'minimal' theme
+  scale_fill_manual(values = c("lightblue", "lightyellow", "lightpink", "grey"), name = "Severity") +  # Set boxplot colors
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),  # Title customization
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels by 45 degrees
+    axis.title.x = element_text(size = 10, vjust = 0.5)  # X-axis label customization
+  ) +
+  scale_y_continuous(breaks = seq(0, 100, by = 10))
+```
