@@ -73,3 +73,13 @@ airplane$Severity <- as.factor(airplane$Severity)
 ```{r unique_severity, include = TRUE}
 unique(airplane$Severity)
 ```
+
+```{r severity_barchart, include = TRUE}
+ggplot(airplane, aes(x = Severity, fill = Severity)) + 
+  geom_bar(stat = "count", width = 0.8, color = "black") +
+  ggtitle("Airplane Severity Distribution") +
+  scale_fill_manual(values = c("red", "yellow", "blue", "purple", "orange")) +  # Specify colors
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Severity", y = "Number of Airplanes")
+```
