@@ -138,3 +138,12 @@ print(correlation_value)
 ```
 
 A correlation of -0.685 suggests that there is a meaningful relationship between the number of days since inspection and the safety score. It seems that, as the time since the last inspection increases, there is a tendency for the safety score to decrease.
+
+We will use the SVM model to predict the severity of accidents.
+
+```{r slicing_data, include = TRUE}
+set.seed(3033)
+intrain <- createDataPartition(y = airplane$Severity, p= 0.8, list = FALSE)
+training <- airplane[intrain,]
+testing <- airplane[-intrain,]
+```
