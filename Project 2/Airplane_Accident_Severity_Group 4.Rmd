@@ -201,3 +201,11 @@ present_levels <- levels(factor(airplane$Accident_Type_Code))
 legend("topright", legend = present_levels, fill = c('lightblue', 'lightgreen', 'lightcoral', 'lightpink', 'lightyellow', 'lightcyan', 'lightgrey'))
 
 ```
+
+## Linear Regression Severity 
+
+```{r}
+glmfit <- glm(Severity ~ Safety_Score, data = training, family = binomial)
+summary(glmfit)
+
+
