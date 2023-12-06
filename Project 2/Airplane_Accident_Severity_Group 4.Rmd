@@ -179,6 +179,20 @@ accuracy <- sum(predicted == actual) / length(actual)
 accuracy_percentage <- sprintf("%.2f", accuracy * 100)
 print(paste("Accuracy:", paste(accuracy_percentage, "%", sep = "")))
 ```
+## Stacked Bar Plot: Violation vs. Accident Type
+
+```{r stacked_bar_plot_violation_accident_type}
+library(ggplot2)
+
+# Bar plot of Violations by Accident_Type_Code
+ggplot(airplane, aes(x = factor(Accident_Type_Code), fill = factor(Violations))) +
+  geom_bar(position = "stack") +
+  ggtitle("Bar Plot of Violations by Accident Type Code") +
+  xlab("Accident Type Code") +
+  ylab("Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
 
 ## Linear Regression Severity 
 
