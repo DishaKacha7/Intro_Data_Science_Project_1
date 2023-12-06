@@ -208,4 +208,15 @@ legend("topright", legend = present_levels, fill = c('lightblue', 'lightgreen', 
 glmfit <- glm(Severity ~ Safety_Score, data = training, family = binomial)
 summary(glmfit)
 
+ggplot(training, aes(x = Severity, y = Safety_Score)) + geom_point() +
+  stat_smooth(
+    method = "glm",
+    formula = y ~ x,
+    color = "blue",
+    se = FALSE,
+    method.args = list(family = binomial)
+  )
+
+```
+
 
