@@ -179,28 +179,6 @@ accuracy <- sum(predicted == actual) / length(actual)
 accuracy_percentage <- sprintf("%.2f", accuracy * 100)
 print(paste("Accuracy:", paste(accuracy_percentage, "%", sep = "")))
 ```
-## Stacked Bar Plot: Severity vs. Accident Type
-
-```{r stacked_bar_plot_severity_accident_type, fig.width=12, fig.height=8}
-# Create a contingency table
-contingency_table <- table(airplane$Severity, airplane$Accident_Type_Code)
-
-# Create a stacked bar plot
-barplot(contingency_table, 
-        col = c('lightblue', 'lightgreen', 'lightcoral', 'lightpink', 'lightyellow', 'lightcyan', 'lightgrey'), 
-        main = 'Stacked Bar Plot: Severity vs. Accident Type',
-        xlab = 'Severity',
-        ylab = 'Count',
-        legend.text = TRUE,
-        beside = TRUE)
-
-# Get the actual levels present in the data
-present_levels <- levels(factor(airplane$Accident_Type_Code))
-
-# Create a legend only for the present levels
-legend("topright", legend = present_levels, fill = c('lightblue', 'lightgreen', 'lightcoral', 'lightpink', 'lightyellow', 'lightcyan', 'lightgrey'))
-
-```
 
 ## Linear Regression Severity 
 
