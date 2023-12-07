@@ -1,0 +1,181 @@
+---
+title: "Airplane Accident Severity : Group 4"
+author: "Amit Shendge, Disha Kacha, Rachel Culbreath, Saniya Shinde"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r init, include=F}
+# The package "ezids" (EZ Intro to Data Science) includes some helper functions we developed for the course. 
+# Some of the frequently used functions are loadPkg(), xkabledply(), xkablesummary(), uzscale(), etc.
+# You will need to install it (once) from GitHub.
+# library(devtools)
+# devtools::install_github("physicsland/ezids")
+# Then load the package in your R session.
+library(ezids)
+library(tidyverse)
+library(caret)
+library(e1071)
+library(nnet)
+```
+
+
+```{r setup, include=FALSE}
+# Some of common RMD options (and the defaults) are: 
+# include=T, eval=T, echo=T, results='hide'/'asis'/'markup',..., collapse=F, warning=T, message=T, error=T, cache=T, fig.width=6, fig.height=4, fig.dim=c(6,4) #inches, fig.align='left'/'center','right', 
+knitr::opts_chunk$set(warning = F, message = F)
+# Can globally set option for number display format.
+options(scientific=T, digits = 3) 
+# options(scipen=9, digits = 3) 
+```
+
+```{r}
+# 1. Do not provide answers/comments inside code blocks (like here) -- those are notes between coders/self and will be ignored for grading. 
+# 2. Make sure your knitr options are set to include all results/code to be graded in the final document.
+# 3. All charts/graphs/tables should have appropriate titles/labels/captions. 
+# 4. Compose your answers using inline R code instead of using the code-block output as much as you can. 
+# 5. Your grade is also determined by the style. Even if you answer everything correctly, but the .html does not look appealing, you will not get full credit. Pay attention to the details that we mentioned in class/homework and in previous sample .Rmd files. For example, how to use #, ##, ###, ..., bold face, italics, inline codes, tables, ..., {results = "asis"}, use of colors in plots/ggplots, and so forth.
+```
+
+The project aims to classify the severity of an airplane based on past incidents. The dataset comprises of 2 files : 
+Train.csv: [10000 x 12 excluding the headers] contains Training data
+Test.csv: [2500 x 11 excluding the headers] contains Test data
+
+Column Descriptions:
+
+Accident_ID : unique id assigned to each row
+Accident_Type_Code : type of accident 
+Cabin_Temperature : the last recorded temperature before the incident, measured in degrees Fahrenheit
+Turbulence_In_gforces : the recorded/estimated turbulence experienced during the accident 
+Control_Metric : an estimation of how much control the pilot had during the incident given the factors at play 
+Total_Safety_Complaints :  number of complaints from mechanics prior to the accident 
+Days_Since_Inspection : how long the plane went without inspection before the incident
+Safety_Score : a measure of how safe the plane was deemed to be 
+Violations : number of violations that the aircraft received during inspections 
+Severity : a description (4 level factor) on the severity of the crash 
+
+```{r reading_csv, include = TRUE}
+airplane = read.csv("DATASET/Airplane Accidents Severity.csv")
+```
+
+```{r factoring_variables, include  = TRUE}
+airplane$Severity <- as.factor(airplane$Severity)
+```
+
+```{r unique_severity, include = TRUE}
+unique(airplane$Severity)
+```
+
+```{r severity_barchart, include = TRUE}
+library(ggplot2)
+ggplot(airplane, aes(x = Severity, fill = Severity)) + 
+  geom_bar(stat = "count", width = 0.8, color = "black") +
+  ggtitle("Airplane Severity Distribution") +
+  scale_fill_manual(values = c("red", "yellow", "blue", "purple", "orange")) +  # Specify colors
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Severity", y = "Number of Airplanes")
+```
+
+We can see from the above plot that most of the airplane crashes were highly fatal and damaging. There is a slight class imabalance with Significant_Damage_And_Fatalities having fewer records.
+
+```{r qqplot_safetyscore, include = TRUE}
+qqnorm(airplane$Safety_Score, main="Q-Q Plot for Safety_Score") 
+qqline(airplane$Safety_Score)
+```
+The Q-Q Plot shows that the data for Safety_Score is normally distributed with the presence of few outliers.
+
+```{r safety_score_severity_boxplot, include  = TRUE}
+ggplot(airplane, aes(x = Severity, y = Safety_Score, fill = Severity)) +
+  geom_boxplot(outlier.shape = 4, outlier.color = 'green', outlier.size = 3) +
+  labs(title = "Boxplot Showing Safety Score Distribution", x = "Severity", y = "Safety Score") +
+  theme_minimal() +  # Apply the 'minimal' theme
+  scale_fill_manual(values = c("lightblue", "lightyellow", "lightpink", "grey"), name = "Severity") +  # Set boxplot colors
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),  # Title customization
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels by 45 degrees
+    axis.title.x = element_text(size = 10, vjust = 0.5)  # X-axis label customization
+  ) +
+  scale_y_continuous(breaks = seq(0, 100, by = 10))
+```
+We can see greater variability in the safety score of airplanes having significant_damage_and_fatalities severity. Airplanes having Minor_Damage_And_Injuries and Significant_Damage_And_Fatalities have almost same median safety score. The median of airplanes having Highly_Fatal_And_Damaging severity have lowest safety score.Airplanes having Highly_Fatal_and_Damaging severity have the lowest safety score and  
+Airplanes having Significant_Damage_and_Fatalities severity have the highest safety score.
+
+For checking whether the number of violations is a factor that leads to an increased risk for plane crashes based on severity, we are using the analysis of variance (ANOVA) test. The ANOVA test will help us determine if there are significant differences in the mean number of violations across different levels of the severity factor.
+
+Null Hypothesis (H0) : There is no significant difference in the mean number of violations among different severity levels.
+
+Alternative Hypothesis(H1) : There is a significant difference in the mean number of violations among at least two severity levels
+
+```{r ANOVA, include = TRUE}
+# Perform ANOVA
+anova_result <- aov(Violations ~ Severity, data = airplane)
+
+# Print the ANOVA summary
+summary(anova_result)
+```
+
+The small p-value (2e-11) indicates that there is strong evidence to reject the null hypothesis.
+There is a significant difference in the mean number of violations among at least two severity levels.
+The F value of 17.3 is relatively large, further supporting the evidence of a significant difference. Therefore, based on the ANOVA test, it appears that the number of violations is a factor associated with an increased risk for plane crashes based on severity.
+
+```{r post_hoc_tukey_hsd, include  = TRUE}
+tukeyviolationAoV <- TukeyHSD(anova_result)
+tukeyviolationAoV
+```  
+The severity levels "Highly_Fatal_And_Damaging" and "Minor_Damage_And_Injuries" are not significantly different in terms of violations. However, "Highly_Fatal_And_Damaging" has significantly higher mean violations compared to the other severity levels, and there are significant differences between "Significant_Damage_And_Fatalities" and "Significant_Damage_And_Serious_Injuries."
+
+## Stacked Bar Plot: Violation vs. Accident Type
+
+```{r stacked_bar_plot_violation_accident_type}
+library(ggplot2)
+
+# Bar plot of Violations by Accident_Type_Code
+ggplot(airplane, aes(x = factor(Accident_Type_Code), fill = factor(Violations))) +
+  geom_bar(position = "stack") +
+  ggtitle("Bar Plot of Violations by Accident Type Code") +
+  xlab("Accident Type Code") +
+  ylab("Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r correlation_plot, include  = TRUE}
+correlation_value <- cor(airplane$Days_Since_Inspection, airplane$Safety_Score)
+print(correlation_value)
+```
+
+A correlation of -0.685 suggests that there is a meaningful relationship between the number of days since inspection and the safety score. It seems that, as the time since the last inspection increases, there is a tendency for the safety score to decrease.
+
+We will use the logistic model to predict the severity of accidents.
+
+## Logistic Regression Severity 
+
+```{r logistic_regression, include = TRUE}
+model <- multinom(Severity ~ Accident_Type_Code + Safety_Score + Control_Metric + Days_Since_Inspection, data = airplane)
+
+summary(model)
+```
+
+```{r logistic_regression, include = TRUE}
+model <- multinom(Severity ~ Accident_Type_Code + Safety_Score + Control_Metric + Days_Since_Inspection, data = airplane)
+
+summary(model)
+training_pred <- predict(mod, df, type="class")
+
+
+```
+
+
+
+
+
+

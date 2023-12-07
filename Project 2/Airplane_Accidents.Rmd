@@ -31,12 +31,91 @@ knitr::opts_chunk$set(warning = F, message = F)
 # Can globally set option for number display format.
 options(scientific=T, digits = 3) 
 # options(scipen=9, digits = 3) 
+
+# Columns	Description
+# Accident_ID	unique id assigned to each row
+# Accident_Type_Code	the type of accident (factor, not numeric)
+# Cabin_Temperature	the last recorded temperature before the incident, measured in degrees fahrenheit
+# Turbulence_In_gforces	the recorded/estimated turbulence experienced during the accident
+# Control_Metric	an estimation of how much control the pilot had during the incident given the factors at play
+# Total_Safety_Complaints	number of complaints from mechanics prior to the accident
+# Days_Since_Inspection	how long the plane went without inspection before the incident
+# Safety_Score	a measure of how safe the plane was deemed to be
+# Violations	number of violations that the aircraft received during inspections
+# Severity	a description (4 level factor) on the severity of the crash [Target]
+```
+
+
+```{r read_csv, include = TRUE}
+flight_accidents_data<-read.csv("DataSet/Airplane Accidents Severity.csv")
+str(flight_accidents_data)
 ```
 
 ```{r read_csv, include = TRUE}
-us_flight_data<-read.csv("DataSetAirplane Accidents Severity.csv")
-str(us_flight_data)
+library(ggplot2)
+ggplot(flight_accidents_data) + 
+  geom_bar(aes(Severity,Safety_Score, fill = as.factor(Severity)), 
+           position = "dodge", stat = "summary", fun.y = "mean")
+
+ggplot(flight_accidents_data) + 
+  geom_bar(aes(Severity,Adverse_Weather_Metric, fill = as.factor(Severity)), 
+           position = "dodge", stat = "summary", fun.y = "mean")
+
+ggplot(flight_accidents_data) + 
+  geom_bar(aes(Severity,Safety_Score, fill = as.factor(Severity)), 
+           position = "dodge", stat = "summary", fun.y = "mean")
 ```
+
+```{r read_csv, include = TRUE}
+flight_accidents_data$Severity<-c(Minor_Damage_And_Injuries=1,Significant_Damage_And_Serious_Injuries=2,Significant_Damage_And_Fatalities=3,Highly_Fatal_And_Damaging=4)[flight_accidents_data$Severity]
+
+library(ggcorrplot)
+corr <- round(cor(flight_accidents_data), 1)
+ggcorrplot(corr)
+```
+
+```{r read_csv, include = TRUE}
+sample <- sample(c(TRUE, FALSE), nrow(flight_accidents_data), replace=TRUE, prob=c(0.7,0.3))
+train <- flight_accidents_data[sample, ]
+test <- flight_accidents_data[!sample, ]  
+
+model <- glm(Severity~Safety_Score+Days_Since_Inspection+Turbulence_In_gforces, family="quasipoisson", data=train)
+summary(model)
+
+predicted <- predict(model, test, type="response")
+
+
+library(InformationValue)
+
+#convert defaults from "Yes" and "No" to 1's and 0's
+test$default <- ifelse(flight_accidents_data$Severity=="Yes", 1, 0)
+
+#find optimal cutoff probability to use to maximize accuracy
+optimal <- optimalCutoff(flight_accidents_data$Severity, predicted)[1]
+optimal
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ```{r sort_columns, include = TRUE}
 library(dplyr)
