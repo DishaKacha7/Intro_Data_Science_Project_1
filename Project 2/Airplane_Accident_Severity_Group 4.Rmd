@@ -139,7 +139,12 @@ ggplot(airplane, aes(x = factor(Accident_Type_Code), fill = factor(Violations)))
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+```{r T Test}
+t_test_result <- t.test(airplane$Turbulence_In_gforces,airplane$Adverse_Weather_Metric)
 
+# Display the t-test result
+t_test_result
+```
 ```{r correlation_plot, include  = TRUE}
 correlation_value <- cor(airplane$Days_Since_Inspection, airplane$Safety_Score)
 print(correlation_value)
