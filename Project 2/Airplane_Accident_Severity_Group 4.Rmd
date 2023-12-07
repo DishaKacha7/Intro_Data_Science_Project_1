@@ -142,9 +142,15 @@ ggplot(airplane, aes(x = factor(Accident_Type_Code), fill = factor(Violations)))
 ```{r T Test}
 t_test_result <- t.test(airplane$Turbulence_In_gforces,airplane$Adverse_Weather_Metric)
 
-# Display the t-test result
 t_test_result
 ```
+*Test Statistic (t): The t-value is 31.468. This value represents how many standard errors the difference between the sample means is. In this case, a higher t-value indicates a greater difference between the means.*
+*Degrees of Freedom (df): The degrees of freedom are 12004. In the context of the t-test, higher degrees of freedom contribute to a more reliable test.*
+*P-value: The p-value is less than 2.2e-16, which is essentially zero. The p-value represents the probability of observing such extreme results (or more extreme) under the assumption that the null hypothesis is true. A very small p-value (less than the common significance level of 0.05) suggests that you can reject the null hypothesis.*
+*Null Hypothesis (alternative hypothesis): The null hypothesis is that the true difference in means is equal to 0. The alternative hypothesis is that the true difference in means is not equal to 0.*
+*Confidence Interval: The 95% confidence interval for the difference in means is given as (0.1180202, 0.1337002). This interval provides a range of values within which we can be 95% confident that the true difference in means lies.*
+*Sample Estimates (Mean of x, Mean of y): The sample mean of 'Turbulence_In_gforces' is 0.3814950, and the sample mean of 'Adverse_Weather_Metric' is 0.2556348. These values represent the average values of the two variables in your samples.*
+
 ```{r correlation_plot, include  = TRUE}
 correlation_value <- cor(airplane$Days_Since_Inspection, airplane$Safety_Score)
 print(correlation_value)
