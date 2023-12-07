@@ -104,49 +104,7 @@ ggplot(airplane, aes(x = Severity, y = Safety_Score, fill = Severity)) +
 ```
 
 
-Null Hypothesis (H0) : There is no significant difference in the mean number of violations among different severity levels.
-
-Alternative Hypothesis(H1) : There is a significant difference in the mean number of violations among at least two severity levels
-
-```{r ANOVA, include = TRUE}
-# Perform ANOVA
-anova_result <- aov(Violations ~ Severity, data = airplane)
-
-# Print the ANOVA summary
-summary(anova_result)
-```
-
-The small p-value (3.2e-11) indicates that there is strong evidence to reject the null hypothesis.
-There is a significant difference in the mean number of violations among at least two severity levels.
-The F value of 17.3 is relatively large, further supporting the evidence of a significant difference. Therefore, based on the ANOVA test, it appears that the number of violations is a factor associated with an increased risk for plane crashes based on severity.
-
-```{r post_hoc_tukey_hsd, include  = TRUE}
-tukeyviolationAoV <- TukeyHSD(anova_result)
-tukeyviolationAoV
-```  
-The severity levels "Highly_Fatal_And_Damaging" and "Minor_Damage_And_Injuries" are not significantly different in terms of violations. However, "Highly_Fatal_And_Damaging" has significantly higher mean violations compared to the other severity levels, and there are significant differences between "Significant_Damage_And_Fatalities" and "Significant_Damage_And_Serious_Injuries."
-
 ## Stacked Bar Plot: Violation vs. Accident Type
-
-*Accident type 1-7 denotes the following:*
-*1.	Locality (Riral, Mixed, Urban)*
-*2.	Predominant Development Type (Farms, woods, residential, industrial, pastures)*
-*3.	RoadSurfaceCondition (Dry, Wet, Snow, Ice)*
-*4.	WeatherCondition-First (Cloudy, clear, raining, snowy, etc)*
-*5.	WeatherCondition-Second (A maximum of two weather conditions may be recorded in the crash, such as rain and severe crosswinds. )*
-*6.	WeatherContributedtotheCrash (An indication, in the officer’s opinion as to whether or not weather (for example, smoke or hail) was a contributing factor in the crash. *
-*a. Yes*
-*b. No*
-*c. Unknown )*
-*7.	AmbientLight (Dusk, Daylight, Darkness, Dawn)*
-
-*Violations 0-7 denotes the following:*
-*0.Unknown*
-*1. Unintentional Violations (These arise from procedures that are impossible for people to follow, often because they are confusing, complex and ambiguous. An example might be where an air traffic controller exceeds the maximum number of work/duty hours after reaching an incorrect conclusion from a complicated duty-rest time planning tool. In this case, the violation is very similar to the class of error known as a “mistake”.)*
-*2.Routine Violations (These result from automatic and sometimes unconscious behaviour. They are habitual actions (strong, but wrong, habits) accepted by the particular work group as normal business, and are often tolerated by the organisation and/or governing body. Employees will usually consider routine violations as low-risk to themself and the task. For example, airside drivers may always drive 10km/hr above the mandatory speed limit.)*
-*3.Situational Violations (These are the result of organisational and environmental factors that make it difficult for employees not to commit violations. These factors include time pressure, lack of supervision, poor ambient conditions (e.g. light, noise, heat), insufficient resources, and a negative culture. Technicians may find themselves “signing-off” completed work on an aircraft without acquiring the necessary supervisory cross-check. Either because of a lack of supervisors, or because the process takes too long.)*
-*4.Optimising Violations (These occur when people try to make a task more exciting or interesting to impress others or to relieve boredom. These are common when people are involved in long periods of monotonous work, such as monitoring tasks, or when the rules are restrictive or outdated. This can be characterised by bored and fatigued pilots during a quiet long-haul flight - let’s see what happens when we push this button!)*
-*5. Exceptional Violations (These are rare occurrences that take place in very unusual circumstances (e.g. emergencies, equipment failure). They can be the result of a conscious decision to violate or an instinctive reaction to the situation. Conscious decisions may include landing with an excessive tailwind on a long runway following an hydraulic systems failure, rather than risk further consequences during the time it takes to re-position for the preferred runway. Instinctive reactions fall much closer to the caveat that pilots may violate rules if it is safer to do so – i.e. continuing with an unstable approach to land following an uncontained engine failure.)*
 
 ```{r stacked_bar_plot_violation_accident_type}
 library(ggplot2)
@@ -160,12 +118,6 @@ ggplot(airplane, aes(x = factor(Accident_Type_Code), fill = factor(Violations)))
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
-*The analysis of the airplane crash dataset reveals distinct patterns in the causes of accidents. Routine Violation (2) is the leading cause, followed by Situational Violation (3) and Optimizing Violation (4). Notably, these violations are frequently associated with Weather First (4), Predominant Development Type (2), and Road Surface Condition (5) accident types. In contrast, Exceptional Violations (5), Unknown Violation (0), and Weather Condition (2) are infrequently cited as crash reasons, indicating their rarity in contributing to accidents.*
-
-# T-test between Turbulence and Weather Metric
-
-*In the following R code, we are performing a Welch Two Sample t-test using the t.test function on the 'Turbulence_In_gforces' and 'Adverse_Weather_Metric' columns of the 'airplane' dataset. The test assesses if the means of the two numeric variables are significantly different, providing a t-statistic, degrees of freedom, and p-value for interpretation.*
-
 ```{r T Test}
 t_test_result <- t.test(airplane$Turbulence_In_gforces,airplane$Adverse_Weather_Metric)
 
@@ -185,8 +137,6 @@ ggplot(airplane, aes(x = Days_Since_Inspection, y = Safety_Score)) +
   labs(title = "Scatter Plot of Days Since Inspection vs Safety Score", x = "Days Since Inspection", y = "Safety Score") +
   theme_minimal()
 ```
-
-A correlation of -0.685 suggests that there is a meaningful relationship between the number of days since inspection and the safety score. It seems that, as the time since the last inspection increases, there is a tendency for the safety score to decrease.
 
 We will use the logistic model to predict the severity of accidents.
 
@@ -218,3 +168,4 @@ plot(roc_medium, col="red")
 plot(roc_high, col="green")
 plot(roc_high2, col="black")
 ```
+
