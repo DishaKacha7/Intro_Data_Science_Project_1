@@ -25,7 +25,6 @@ library(ezids)
 library(tidyverse)
 library(caret)
 library(e1071)
-library(nnet)
 ```
 
 
@@ -64,7 +63,7 @@ Violations : number of violations that the aircraft received during inspections
 Severity : a description (4 level factor) on the severity of the crash 
 
 ```{r reading_csv, include = TRUE}
-airplane = read.csv("DATASET/Airplane Accidents Severity.csv")
+airplane = read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/Project 2/train.csv")
 ```
 
 ```{r factoring_variables, include  = TRUE}
@@ -76,7 +75,6 @@ unique(airplane$Severity)
 ```
 
 ```{r severity_barchart, include = TRUE}
-library(ggplot2)
 ggplot(airplane, aes(x = Severity, fill = Severity)) + 
   geom_bar(stat = "count", width = 0.8, color = "black") +
   ggtitle("Airplane Severity Distribution") +
@@ -134,6 +132,53 @@ tukeyviolationAoV
 ```  
 The severity levels "Highly_Fatal_And_Damaging" and "Minor_Damage_And_Injuries" are not significantly different in terms of violations. However, "Highly_Fatal_And_Damaging" has significantly higher mean violations compared to the other severity levels, and there are significant differences between "Significant_Damage_And_Fatalities" and "Significant_Damage_And_Serious_Injuries."
 
+```{r correlation_plot, include  = TRUE}
+correlation_value <- cor(airplane$Days_Since_Inspection, airplane$Safety_Score)
+print(correlation_value)
+```
+
+A correlation of -0.685 suggests that there is a meaningful relationship between the number of days since inspection and the safety score. It seems that, as the time since the last inspection increases, there is a tendency for the safety score to decrease.
+
+We will use the SVM model to predict the severity of accidents.
+
+```{r slicing_data, include = TRUE}
+set.seed(3033)
+intrain <- createDataPartition(y = airplane$Severity, p= 0.8, list = FALSE)
+training <- airplane[intrain,]
+testing <- airplane[-intrain,]
+```
+
+```{r scaling_numerical_Columns, include = TRUE}
+numeric_columns <- sapply(training, is.numeric)
+numeric_data <- training[, numeric_columns]
+# Scale the numeric features
+scaled_data <- scale(numeric_data)
+# Replacing the scaled values in the original dataframe
+training[, numeric_columns] <- scaled_data
+numeric_columns <- sapply(testing, is.numeric)
+numeric_data <- testing[, numeric_columns]
+# Scale the numeric features
+scaled_data <- scale(numeric_data)
+# Replacing the scaled values in the original dataframe
+testing[, numeric_columns] <- scaled_data
+```
+
+```{r smv_model, include = TRUE}
+svm_model <- svm(Severity ~ Accident_Type_Code + Safety_Score + Control_Metric + Days_Since_Inspection , data = training, kernel = "radial",C=100,gamma=5)
+# Assuming 'Severity' is the target variable in the test data
+actual <- testing$Severity
+# Make predictions on test data
+predicted <- predict(svm_model, newdata = testing)
+
+#Creating confusion matrix
+conf_matrix <- confusionMatrix(data = predicted, reference = actual)
+print(conf_matrix)
+
+# Evaluate model accuracy
+accuracy <- sum(predicted == actual) / length(actual)
+accuracy_percentage <- sprintf("%.2f", accuracy * 100)
+print(paste("Accuracy:", paste(accuracy_percentage, "%", sep = "")))
+```
 ## Stacked Bar Plot: Violation vs. Accident Type
 
 ```{r stacked_bar_plot_violation_accident_type}
@@ -146,36 +191,48 @@ ggplot(airplane, aes(x = factor(Accident_Type_Code), fill = factor(Violations)))
   xlab("Accident Type Code") +
   ylab("Count") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
-
-```{r correlation_plot, include  = TRUE}
-correlation_value <- cor(airplane$Days_Since_Inspection, airplane$Safety_Score)
-print(correlation_value)
-```
-
-A correlation of -0.685 suggests that there is a meaningful relationship between the number of days since inspection and the safety score. It seems that, as the time since the last inspection increases, there is a tendency for the safety score to decrease.
-
-We will use the logistic model to predict the severity of accidents.
 
 ## Logistic Regression Severity 
 
-```{r logistic_regression, include = TRUE}
-model <- multinom(Severity ~ Accident_Type_Code + Safety_Score + Control_Metric + Days_Since_Inspection, data = airplane)
+```{r}
+glmfit <- glm(Severity ~ Safety_Score, data = airplane, family = binomial)
 
-summary(model)
+summary(glmfit)
+
+ggplot(airplane, aes(x = Safety_Score, y = Severity)) +
+  geom_point() +
+  geom_smooth(
+    method = "glm",
+    method.args = list(family = "binomial"),
+    se = FALSE,
+    color = "blue"
+  ) +
+  labs(title = "Logistic Regression: Severity ~ Safety Score",
+       x = "Safety Score",
+       y = "Severity") +
+  theme_minimal()
+
+
 ```
+## Linear Regression 
 
-```{r logistic_regression, include = TRUE}
-model <- multinom(Severity ~ Accident_Type_Code + Safety_Score + Control_Metric + Days_Since_Inspection, data = airplane)
+```{r}
 
-summary(model)
-training_pred <- predict(mod, df, type="class")
+lm_model <- lm(Max_Elevation ~ Turbulence_In_gforces + Adverse_Weather_Metric, data = airplane)
+
+
+summary(lm_model)
+
+ggplot(airplane, aes(x = Turbulence_In_gforces, y = Max_Elevation)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+  labs(title = "Max Elevation ~ Turbulence and Adverse Weather",
+       x = "Turbulence_In_gforces",
+       y = "Max_Elevation") +
+  theme_minimal()
+
 
 
 ```
-
-
-
-
-
-
