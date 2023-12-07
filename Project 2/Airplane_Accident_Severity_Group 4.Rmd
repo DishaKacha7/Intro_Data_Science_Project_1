@@ -194,21 +194,45 @@ ggplot(airplane, aes(x = factor(Accident_Type_Code), fill = factor(Violations)))
 
 ```
 
-## Linear Regression Severity 
+## Logistic Regression Severity 
 
 ```{r}
-glmfit <- glm(Severity ~ Safety_Score, data = training, family = binomial)
+glmfit <- glm(Severity ~ Safety_Score, data = airplane, family = binomial)
+
 summary(glmfit)
 
-ggplot(training, aes(x = Severity, y = Safety_Score)) + geom_point() +
-  stat_smooth(
+ggplot(airplane, aes(x = Safety_Score, y = Severity)) +
+  geom_point() +
+  geom_smooth(
     method = "glm",
-    formula = y ~ x,
-    color = "blue",
+    method.args = list(family = "binomial"),
     se = FALSE,
-    method.args = list(family = binomial)
-  )
+    color = "blue"
+  ) +
+  labs(title = "Logistic Regression: Severity ~ Safety Score",
+       x = "Safety Score",
+       y = "Severity") +
+  theme_minimal()
+
 
 ```
+## Linear Regression 
+
+```{r}
+
+lm_model <- lm(Max_Elevation ~ Turbulence_In_gforces + Adverse_Weather_Metric, data = airplane)
 
 
+summary(lm_model)
+
+ggplot(airplane, aes(x = Turbulence_In_gforces, y = Max_Elevation)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+  labs(title = "Max Elevation ~ Turbulence and Adverse Weather",
+       x = "Turbulence_In_gforces",
+       y = "Max_Elevation") +
+  theme_minimal()
+
+
+
+```
