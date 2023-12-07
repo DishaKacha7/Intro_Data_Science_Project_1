@@ -126,6 +126,18 @@ tukeyviolationAoV
 ```  
 The severity levels "Highly_Fatal_And_Damaging" and "Minor_Damage_And_Injuries" are not significantly different in terms of violations. However, "Highly_Fatal_And_Damaging" has significantly higher mean violations compared to the other severity levels, and there are significant differences between "Significant_Damage_And_Fatalities" and "Significant_Damage_And_Serious_Injuries."
 
+*Accident type 1-7 denotes the following:*
+*1.	Locality (Riral, Mixed, Urban)*
+*2.	Predominant Development Type (Farms, woods, residential, industrial, pastures)*
+*3.	RoadSurfaceCondition (Dry, Wet, Snow, Ice)*
+*4.	WeatherCondition-First (Cloudy, clear, raining, snowy, etc)*
+*5.	WeatherCondition-Second (A maximum of two weather conditions may be recorded in the crash, such as rain and severe crosswinds. )*
+*6.	WeatherContributedtotheCrash (An indication, in the officer’s opinion as to whether or not weather (for example, smoke or hail) was a contributing factor in the crash. *
+*a. Yes*
+*b. No*
+*c. Unknown )*
+*7.	AmbientLight (Dusk, Daylight, Darkness, Dawn)*
+
 ## Stacked Bar Plot: Violation vs. Accident Type
 
 ```{r stacked_bar_plot_violation_accident_type}
