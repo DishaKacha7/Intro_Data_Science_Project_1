@@ -163,10 +163,28 @@ We will use the logistic model to predict the severity of accidents.
 ## Logistic Regression Severity 
 
 ```{r logistic_regression, include = TRUE}
-model <- multinom(Severity ~ Safety_Score + Days_Since_Inspection + Control_Metric + Turbulence_In_gforces + Accident_Type_Code  +Adverse_Weather_Metric , data = airplane)
+model <- multinom(Severity ~ Safety_Score + Days_Since_Inspection + Control_Metric + Accident_Type_Code  +Adverse_Weather_Metric , data = airplane)
 
-#summary(model)
+summary(model)
 training_pred <- predict(model, airplane, type="class")
 
 confusionMatrix(training_pred, airplane$Severity)
+```
+
+```{r roc_curve, include = TRUE}
+
+model <- multinom(Severity ~ Safety_Score + Days_Since_Inspection + Control_Metric + Accident_Type_Code + Adverse_Weather_Metric , data = airplane)
+probs <- predict(model, airplane, type="probs")
+
+# Assuming 'Severity' has three levels: Low, Medium, High
+roc_low <- roc(airplane$Severity, probs[, "Highly_Fatal_And_Damaging"])
+roc_medium <- roc(airplane$Severity, probs[, "Minor_Damage_And_Injuries"])
+roc_high <- roc(airplane$Severity, probs[, "Significant_Damage_And_Fatalities"])
+roc_high2 <- roc(airplane$Severity, probs[, "Significant_Damage_And_Serious_Injuries"])
+
+# Plot ROC Curve
+plot(roc_low, main="ROC Curves", col="blue")
+plot(roc_medium, col="red")
+plot(roc_high, col="green")
+plot(roc_high2, col="black")
 ```
