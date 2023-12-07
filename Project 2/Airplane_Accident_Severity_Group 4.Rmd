@@ -126,6 +126,8 @@ tukeyviolationAoV
 ```  
 The severity levels "Highly_Fatal_And_Damaging" and "Minor_Damage_And_Injuries" are not significantly different in terms of violations. However, "Highly_Fatal_And_Damaging" has significantly higher mean violations compared to the other severity levels, and there are significant differences between "Significant_Damage_And_Fatalities" and "Significant_Damage_And_Serious_Injuries."
 
+## Stacked Bar Plot: Violation vs. Accident Type
+
 *Accident type 1-7 denotes the following:*
 *1.	Locality (Riral, Mixed, Urban)*
 *2.	Predominant Development Type (Farms, woods, residential, industrial, pastures)*
@@ -145,8 +147,6 @@ The severity levels "Highly_Fatal_And_Damaging" and "Minor_Damage_And_Injuries" 
 *3.Situational Violations (These are the result of organisational and environmental factors that make it difficult for employees not to commit violations. These factors include time pressure, lack of supervision, poor ambient conditions (e.g. light, noise, heat), insufficient resources, and a negative culture. Technicians may find themselves “signing-off” completed work on an aircraft without acquiring the necessary supervisory cross-check. Either because of a lack of supervisors, or because the process takes too long.)*
 *4.Optimising Violations (These occur when people try to make a task more exciting or interesting to impress others or to relieve boredom. These are common when people are involved in long periods of monotonous work, such as monitoring tasks, or when the rules are restrictive or outdated. This can be characterised by bored and fatigued pilots during a quiet long-haul flight - let’s see what happens when we push this button!)*
 *5. Exceptional Violations (These are rare occurrences that take place in very unusual circumstances (e.g. emergencies, equipment failure). They can be the result of a conscious decision to violate or an instinctive reaction to the situation. Conscious decisions may include landing with an excessive tailwind on a long runway following an hydraulic systems failure, rather than risk further consequences during the time it takes to re-position for the preferred runway. Instinctive reactions fall much closer to the caveat that pilots may violate rules if it is safer to do so – i.e. continuing with an unstable approach to land following an uncontained engine failure.)*
-
-## Stacked Bar Plot: Violation vs. Accident Type
 
 ```{r stacked_bar_plot_violation_accident_type}
 library(ggplot2)
