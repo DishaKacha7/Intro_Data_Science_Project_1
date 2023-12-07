@@ -75,6 +75,7 @@ unique(airplane$Severity)
 ```
 
 ```{r severity_barchart, include = TRUE}
+library(ggplot2)
 ggplot(airplane, aes(x = Severity, fill = Severity)) + 
   geom_bar(stat = "count", width = 0.8, color = "black") +
   ggtitle("Airplane Severity Distribution") +
@@ -95,11 +96,11 @@ ggplot(airplane, aes(x = Severity, y = Safety_Score, fill = Severity)) +
   theme_minimal() +  # Apply the 'minimal' theme
   scale_fill_manual(values = c("lightblue", "lightyellow", "lightpink", "grey"), name = "Severity") +  # Set boxplot colors
   theme(
-    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),  # Title customization
-    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels by 45 degrees
+    plot.title = element_text(size = 8, face = "bold", hjust = 0.5),  # Title customization
+    axis.text.x = element_text(angle = 45, hjust = 1,size=6),  # Rotate x-axis labels by 45 degrees
     axis.title.x = element_text(size = 10, vjust = 0.5)  # X-axis label customization
   ) +
-  scale_y_continuous(breaks = seq(0, 100, by = 10))
+  scale_y_continuous(breaks = seq(0, 100, by = 20))
 ```
 
 
