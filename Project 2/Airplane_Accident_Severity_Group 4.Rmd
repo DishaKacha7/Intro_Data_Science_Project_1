@@ -140,6 +140,7 @@ ggplot(airplane, aes(x = factor(Accident_Type_Code), fill = factor(Violations)))
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+*In the following R code, we are performing a Welch Two Sample t-test using the t.test function on the 'Turbulence_In_gforces' and 'Adverse_Weather_Metric' columns of the 'airplane' dataset. The test assesses if the means of the two numeric variables are significantly different, providing a t-statistic, degrees of freedom, and p-value for interpretation.*
 ```{r T Test}
 t_test_result <- t.test(airplane$Turbulence_In_gforces,airplane$Adverse_Weather_Metric)
 
