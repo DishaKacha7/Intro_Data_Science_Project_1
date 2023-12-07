@@ -188,3 +188,11 @@ plot(roc_medium, col="red")
 plot(roc_high, col="green")
 plot(roc_high2, col="black")
 ```
+```{r vif, include=TRUE}
+selected_variables <- airplane[, c("Safety_Score", "Days_Since_Inspection", "Control_Metric", "Accident_Type_Code", "Adverse_Weather_Metric")]
+
+vif_result <- vif(lm(selected_variables))
+
+# Print VIF results
+print(vif_result)
+```
