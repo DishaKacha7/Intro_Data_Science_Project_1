@@ -46,9 +46,7 @@ options(scientific=T, digits = 3)
 # 5. Your grade is also determined by the style. Even if you answer everything correctly, but the .html does not look appealing, you will not get full credit. Pay attention to the details that we mentioned in class/homework and in previous sample .Rmd files. For example, how to use #, ##, ###, ..., bold face, italics, inline codes, tables, ..., {results = "asis"}, use of colors in plots/ggplots, and so forth.
 ```
 
-The project aims to classify the severity of an airplane based on past incidents. The dataset comprises of 2 files : 
-Train.csv: [10000 x 12 excluding the headers] contains Training data
-
+The project aims to classify the severity of an airplane based on past incidents. The dataset comprises of 10000 rows with 12 columns.
 Column Descriptions:
 
 Accident_ID : unique id assigned to each row
@@ -61,6 +59,8 @@ Days_Since_Inspection : how long the plane went without inspection before the in
 Safety_Score : a measure of how safe the plane was deemed to be 
 Violations : number of violations that the aircraft received during inspections 
 Severity : a description (4 level factor) on the severity of the crash 
+
+The severity variable has four levels : Minor_Damage_And_Injuries, Significant_Damage_And_Serious_Injuries, Significant_Damage_And_Serious_Injuries and Highly_Fatal_And_Damaging.
 
 ```{r reading_csv, include = TRUE}
 airplane = read.csv("C:/Users/Saniya Shinde/OneDrive/Desktop/Projects/Semester I/Data Science/Project 2/Airplane Accidents Severity.csv")
@@ -87,8 +87,6 @@ ggplot(airplane, aes(x = Severity, fill = Severity)) +
 
 We can see from the above plot that most of the airplane crashes were highly fatal and damaging. There is a slight class imabalance with Significant_Damage_And_Fatalities having fewer records.
 
-
-
 ```{r safety_score_severity_boxplot, include  = TRUE}
 ggplot(airplane, aes(x = Severity, y = Safety_Score, fill = Severity)) +
   geom_boxplot(outlier.shape = 4, outlier.color = 'green', outlier.size = 3) +
@@ -102,6 +100,7 @@ ggplot(airplane, aes(x = Severity, y = Safety_Score, fill = Severity)) +
   ) +
   scale_y_continuous(breaks = seq(0, 100, by = 20))
 ```
+
 
 
 ## Stacked Bar Plot: Violation vs. Accident Type
