@@ -26,6 +26,7 @@ library(tidyverse)
 library(caret)
 library(e1071)
 library(nnet)
+library(pROC)
 ```
 
 
@@ -50,14 +51,23 @@ The project aims to classify the severity of an airplane based on past incidents
 Column Descriptions:
 
 Accident_ID : unique id assigned to each row
+
 Accident_Type_Code : type of accident 
+
 Cabin_Temperature : the last recorded temperature before the incident, measured in degrees Fahrenheit
-Turbulence_In_gforces : the recorded/estimated turbulence experienced during the accident 
+
+Turbulence_In_gforces : the recorded/estimated turbulence experienced during the accident
+
 Control_Metric : an estimation of how much control the pilot had during the incident given the factors at play 
+
 Total_Safety_Complaints :  number of complaints from mechanics prior to the accident 
+
 Days_Since_Inspection : how long the plane went without inspection before the incident
+
 Safety_Score : a measure of how safe the plane was deemed to be 
+
 Violations : number of violations that the aircraft received during inspections 
+
 Severity : a description (4 level factor) on the severity of the crash 
 
 The severity variable has four levels : Minor_Damage_And_Injuries, Significant_Damage_And_Serious_Injuries, Significant_Damage_And_Serious_Injuries and Highly_Fatal_And_Damaging.
@@ -74,6 +84,8 @@ airplane$Severity <- as.factor(airplane$Severity)
 unique(airplane$Severity)
 ```
 
+## Bar Chart to show Airplane Count for each Severity
+
 ```{r severity_barchart, include = TRUE}
 library(ggplot2)
 ggplot(airplane, aes(x = Severity, fill = Severity)) + 
@@ -86,6 +98,8 @@ ggplot(airplane, aes(x = Severity, fill = Severity)) +
 ```
 
 We can see from the above plot that most of the airplane crashes were highly fatal and damaging. There is a slight class imabalance with Significant_Damage_And_Fatalities having fewer records.
+
+## Boxplot showing Safety Score versus Severity
 
 ```{r safety_score_severity_boxplot, include  = TRUE}
 ggplot(airplane, aes(x = Severity, y = Safety_Score, fill = Severity)) +
@@ -102,6 +116,7 @@ ggplot(airplane, aes(x = Severity, y = Safety_Score, fill = Severity)) +
 ```
 
 
+From the above boxplot, we can see that the incidents having severity as highly fatal and damaging have safety score than the other categories, which indicates that higher severity accidents have lower safety score. We can also see that the median safety score for airplane accidents with minor damage and injuries severity is the highest, which indicates that the lower severity incidents have highest safety score. The box of significant damage and fatalities severity is relatively tall which indicates a wider spread of data. We can also see presence of outliers which are shown in green.
 
 ## Stacked Bar Plot: Violation vs. Accident Type
 
@@ -117,18 +132,32 @@ ggplot(airplane, aes(x = factor(Accident_Type_Code), fill = factor(Violations)))
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
-```{r T Test}
+
+## T-test 
+
+```{r T Test,include = TRUE}
 t_test_result <- t.test(airplane$Turbulence_In_gforces,airplane$Adverse_Weather_Metric)
 
 t_test_result
 ```
-*Test Statistic (t): The t-value is 31.468. This value represents how many standard errors the difference between the sample means is. In this case, a higher t-value indicates a greater difference between the means.*
-*Degrees of Freedom (df): The degrees of freedom are 12004. In the context of the t-test, higher degrees of freedom contribute to a more reliable test.*
-*P-value: The p-value is less than 2.2e-16, which is essentially zero. The p-value represents the probability of observing such extreme results (or more extreme) under the assumption that the null hypothesis is true. A very small p-value (less than the common significance level of 0.05) suggests that you can reject the null hypothesis.*
-*Null Hypothesis (alternative hypothesis): The null hypothesis is that the true difference in means is equal to 0. The alternative hypothesis is that the true difference in means is not equal to 0.*
-*Confidence Interval: The 95% confidence interval for the difference in means is given as (0.1180202, 0.1337002). This interval provides a range of values within which we can be 95% confident that the true difference in means lies.*
-*Sample Estimates (Mean of x, Mean of y): The sample mean of 'Turbulence_In_gforces' is 0.3814950, and the sample mean of 'Adverse_Weather_Metric' is 0.2556348. These values represent the average values of the two variables in your samples.*
-*With such a small p-value (p-value < 0.05), you would reject the null hypothesis. This suggests that there is a statistically significant difference between the means of 'Turbulence_In_gforces' and 'Adverse_Weather_Metric'. The confidence interval provides a range of plausible values for the true difference in means, and since it does not include 0, it further supports the rejection of the null hypothesis.*
+
+
+Test Statistic (t): The t-value is 31.468. This value represents how many standard errors the difference between the sample means is. In this case, a higher t-value indicates a greater difference between the means.
+
+Degrees of Freedom (df): The degrees of freedom are 12004. In the context of the t-test, higher degrees of freedom contribute to a more reliable test.
+
+P-value: The p-value is less than 2.2e-16, which is essentially zero. The p-value represents the probability of observing such extreme results (or more extreme) under the assumption that the null hypothesis is true. A very small p-value (less than the common significance level of 0.05) suggests that you can reject the null hypothesis.
+
+Null Hypothesis (alternative hypothesis): The null hypothesis is that the true difference in means is equal to 0. The alternative hypothesis is that the true difference in means is not equal to 0.
+
+
+Confidence Interval: The 95% confidence interval for the difference in means is given as (0.1180202, 0.1337002). This interval provides a range of values within which we can be 95% confident that the true difference in means lies.
+
+Sample Estimates (Mean of x, Mean of y): The sample mean of 'Turbulence_In_gforces' is 0.3814950, and the sample mean of 'Adverse_Weather_Metric' is 0.2556348. These values represent the average values of the two variables in your samples.
+
+With such a small p-value (p-value < 0.05), you would reject the null hypothesis. This suggests that there is a statistically significant difference between the means of 'Turbulence_In_gforces' and 'Adverse_Weather_Metric'. The confidence interval provides a range of plausible values for the true difference in means, and since it does not include 0, it further supports the rejection of the null hypothesis.
+
+## Scatter Plot of Days_Since_Inspection versus Safety_Score
 
 ```{r scatter_plot, include  = TRUE}
 ggplot(airplane, aes(x = Days_Since_Inspection, y = Safety_Score)) +
@@ -137,9 +166,11 @@ ggplot(airplane, aes(x = Days_Since_Inspection, y = Safety_Score)) +
   theme_minimal()
 ```
 
-We will use the logistic model to predict the severity of accidents.
+From the above scatter plot, we can see a downward trend in data. As Days_Since_Inspection increases, Safety Score tends to decrease. More recently inspected airplanes have higher safety score. The relationship does not appear to be perfectly linear as data points are quite scattered and do not form a clear line.
 
-## Logistic Regression Severity 
+## Logistic Regression Model 
+
+We will use the logistic model to predict the severity of accidents.
 
 ```{r logistic_regression, include = TRUE}
 model <- multinom(Severity ~ Safety_Score + Days_Since_Inspection + Control_Metric + Accident_Type_Code  +Adverse_Weather_Metric , data = airplane)
@@ -149,6 +180,7 @@ training_pred <- predict(model, airplane, type="class")
 
 confusionMatrix(training_pred, airplane$Severity)
 ```
+
 
 ```{r roc_curve, include = TRUE}
 
@@ -167,4 +199,3 @@ plot(roc_medium, col="red")
 plot(roc_high, col="green")
 plot(roc_high2, col="black")
 ```
-
