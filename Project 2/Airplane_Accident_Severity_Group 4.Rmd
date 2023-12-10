@@ -53,6 +53,11 @@ options(scientific=T, digits = 3)
 The data set our group has selected is airplane accident severity. This data set came from kaggle
 and we made adaptations in order to analyze the trends in our data set. Our group was interested in this data set as it 
 is something we are interested in as flying is one of the major ways of transportation. 
+This data set includes a comprehensive analysis of Accident_ID, Accident_Type_Code, Cabin_Temperature, Turbulence_In_gforces,
+Control_Metric, Total_Safety_Complaints, Days_Since_Inspection, Safety_Score, Violations, and Severity. Through these 
+data points we were able to develop SMART questions that will allow us to determine factors that contribute to the severity of airplance accidents.
+This data was presented through stastical analysis and visizulizations to allow us to gain an understanding of the results of the data. 
+
 
 The project aims to classify the severity of an airplane based on past incidents. The dataset comprises of 10000 rows with 12 columns.
 Column Descriptions:
