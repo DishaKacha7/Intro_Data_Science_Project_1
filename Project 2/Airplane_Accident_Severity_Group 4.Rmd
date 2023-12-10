@@ -211,3 +211,7 @@ plot(roc_medium, col="red")
 plot(roc_high, col="green")
 plot(roc_high2, col="black")
 ```
+
+## Conclusion 
+
+
