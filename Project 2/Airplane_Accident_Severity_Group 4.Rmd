@@ -47,6 +47,13 @@ options(scientific=T, digits = 3)
 # 5. Your grade is also determined by the style. Even if you answer everything correctly, but the .html does not look appealing, you will not get full credit. Pay attention to the details that we mentioned in class/homework and in previous sample .Rmd files. For example, how to use #, ##, ###, ..., bold face, italics, inline codes, tables, ..., {results = "asis"}, use of colors in plots/ggplots, and so forth.
 ```
 
+## Introduction
+
+<br>
+The data set our group has selected is airplane accident severity. This data set came from kaggle
+and we made adaptations in order to analyze the trends in our data set. Our group was interested in this data set as it 
+is something we are interested in as flying is one of the major ways of transportation. 
+
 The project aims to classify the severity of an airplane based on past incidents. The dataset comprises of 10000 rows with 12 columns.
 Column Descriptions:
 
