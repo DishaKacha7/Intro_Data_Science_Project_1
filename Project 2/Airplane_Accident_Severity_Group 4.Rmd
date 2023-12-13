@@ -213,5 +213,9 @@ plot(roc_high2, col="black")
 ```
 
 ## Conclusion 
-
+<br>
+The findings of our projects have allowed to to have a better insight into the factor that contribute to airline accidents. Through a comprehensive examination of 
+the severity of airplane accidents we were able to conclude there might be certain factors that increase the probability of the severity of an accident. 
+Looking at the data we can categorize the data into low, medium, and high levels of severity. This categorize allow us to determine if there the severity of the accident is affected by factors such as safety score, days since inspection, and number of violations. This analysis will help us to have a better understanding if there 
+are certain things that can be done in order to decrease the rate of airplane accidents. According to the findings the number of airplane crashes have decreased significantly and studying and understanding this data will allow us to make suggestions to continue to lower the number of accidents that occur. 
 
