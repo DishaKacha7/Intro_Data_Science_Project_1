@@ -50,10 +50,7 @@ ggplot(data = year, aes(x = factor(Year), fill = factor(Year))) +
 
 table(year$usg_apt)
 
-  
-
 ```
-
 
 ```{r }
 mx <- max(year$usg_apt)
