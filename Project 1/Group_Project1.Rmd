@@ -30,7 +30,6 @@ ggplot(year, aes(x = usg_apt, y = Year )) +
        x = "Airport location",
        y = "Year"
        )
-
 ```
 
 ```{r }
