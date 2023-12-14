@@ -47,9 +47,7 @@ ggplot(data = year, aes(x = factor(Year), fill = factor(Year))) +
 ```
 
 ```{r }
-
 table(year$usg_apt)
-
 ```
 
 ```{r }
