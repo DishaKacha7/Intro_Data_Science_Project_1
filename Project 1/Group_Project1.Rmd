@@ -21,8 +21,6 @@ str(flight_data)
 ```{r }
 year <- flight_data[order(flight_data$Year,flight_data$Month),]
 print(year)
-
-
 ```
                  
 ```{r }
